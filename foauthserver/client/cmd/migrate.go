@@ -1,16 +1,25 @@
 package cmd
 
 import (
-	"github.com/floppyisadog/foauthserver/util/config"
-	"github.com/floppyisadog/foauthserver/util/database"
-	"github.com/floppyisadog/foauthserver/util/migrations"
+	"github.com/floppyisadog/appcommon/utils/database"
+	"github.com/floppyisadog/foauthserver/managers/configmgr"
+	"github.com/floppyisadog/foauthserver/models/migrations"
 )
 
 // Migrate runs database migrations
 func Migrate(configFile string) error {
-	config.InitConfig(configFile)
+	configmgr.InitConfig(configFile)
 
-	db, err := database.InitDB(config.GetConfig())
+	dbcf := configmgr.GetConfig().Database
+	db, err := database.InitDB(dbcf.Type,
+		dbcf.User,
+		dbcf.Password,
+		dbcf.Host,
+		dbcf.DatabaseName,
+		dbcf.Port,
+		dbcf.MaxIdleConns,
+		dbcf.MaxOpenConns,
+		configmgr.GetConfig().IsDevelopment)
 	if err != nil {
 		return err
 	}

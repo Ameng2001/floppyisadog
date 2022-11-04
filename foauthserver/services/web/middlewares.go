@@ -3,8 +3,8 @@ package web
 import (
 	"encoding/gob"
 
+	"github.com/floppyisadog/appcommon/utils"
 	"github.com/floppyisadog/foauthserver/services/oauth"
-	"github.com/floppyisadog/foauthserver/util"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -33,14 +33,14 @@ func authSessionMiddleware() gin.HandlerFunc {
 		if sessionUser == nil {
 			query := ctx.Request.URL.Query()
 			query.Set("login_redirect_uri", ctx.Request.URL.Path)
-			util.RedirectWithQueryString("/login", query, ctx)
+			utils.RedirectWithQueryString("/login", query, ctx)
 			return
 		}
 
 		if err := authenticateWithSession(sessionUser); err != nil {
 			query := ctx.Request.URL.Query()
 			query.Set("login_redirect_uri", ctx.Request.URL.Path)
-			util.RedirectWithQueryString("/login", query, ctx)
+			utils.RedirectWithQueryString("/login", query, ctx)
 			return
 		}
 

@@ -1,7 +1,7 @@
 package oauth
 
 import (
-	"github.com/floppyisadog/foauthserver/common"
+	"github.com/floppyisadog/appcommon/enums"
 	"github.com/floppyisadog/foauthserver/models"
 )
 
@@ -59,10 +59,10 @@ type IntrospectResponse struct {
 func (s *IntrospectSerializer) Response() (*IntrospectResponse, error) {
 	var introspectResponse = &IntrospectResponse{
 		Active:    true,
-		TokenType: common.TOKEN_TYPE_BEARER,
+		TokenType: enums.TOKEN_TYPE_BEARER,
 	}
 
-	if s.tokenType == common.ACCESSTOKEN_HINT {
+	if s.tokenType == enums.ACCESSTOKEN_HINT {
 		introspectResponse.Scope = s.accessTokenModel.Scope
 		introspectResponse.ExpiresAt = int(s.accessTokenModel.ExpiresAt.Unix())
 		if s.accessTokenModel.ClientID.Valid {
@@ -80,7 +80,7 @@ func (s *IntrospectSerializer) Response() (*IntrospectResponse, error) {
 			}
 			introspectResponse.Username = user.Username
 		}
-	} else if s.tokenType == common.REFRESHTOKEN_HINT {
+	} else if s.tokenType == enums.REFRESHTOKEN_HINT {
 		introspectResponse.Scope = s.refreshTokenModel.Scope
 		introspectResponse.ExpiresAt = int(s.refreshTokenModel.ExpiresAt.Unix())
 		if s.refreshTokenModel.ClientID.Valid {

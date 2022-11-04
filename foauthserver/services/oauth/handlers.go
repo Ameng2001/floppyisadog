@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/floppyisadog/foauthserver/common"
+	"github.com/floppyisadog/appcommon/codes"
+	"github.com/floppyisadog/appcommon/enums"
+	"github.com/floppyisadog/appcommon/utils"
+	"github.com/floppyisadog/foauthserver/managers/configmgr"
 	"github.com/floppyisadog/foauthserver/models"
-	"github.com/floppyisadog/foauthserver/util"
-	"github.com/floppyisadog/foauthserver/util/config"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,13 +25,13 @@ var (
 
 func tokensHandler(c *gin.Context) {
 	if err := c.Request.ParseForm(); err != nil {
-		c.JSON(http.StatusInternalServerError, common.NewError("oauth", err))
+		c.JSON(http.StatusInternalServerError, codes.NewError("oauth", err))
 		return
 	}
 
 	grantHandler, ok := grantTypes[c.Request.Form.Get("grant_type")]
 	if !ok {
-		c.JSON(http.StatusBadRequest, common.NewError("oauth", errors.New("invalid grant type")))
+		c.JSON(http.StatusBadRequest, codes.NewError("oauth", errors.New("invalid grant type")))
 		return
 	}
 
@@ -38,14 +39,14 @@ func tokensHandler(c *gin.Context) {
 	client, err := basicAuthClient(c)
 	if err != nil {
 		c.Header("WWW-Authenticate", fmt.Sprintf("Bearer realm=%s", "floppyisadog-oauth2-server"))
-		c.JSON(http.StatusUnauthorized, common.NewError("oauth", err))
+		c.JSON(http.StatusUnauthorized, codes.NewError("oauth", err))
 		return
 	}
 
 	// grant processing
 	resp, err := grantHandler(c, client)
 	if err != nil {
-		c.JSON(common.GetErrStatusCode(err), common.NewError("oauth", err))
+		c.JSON(codes.GetErrStatusCode(err), codes.NewError("oauth", err))
 		return
 	}
 
@@ -57,14 +58,14 @@ func introspectHandler(c *gin.Context) {
 	client, err := basicAuthClient(c)
 	if err != nil {
 		c.Header("WWW-Authenticate", fmt.Sprintf("Bearer realm=%s", "floppyisadog-oauth2-server"))
-		c.JSON(http.StatusUnauthorized, common.NewError("oauth", err))
+		c.JSON(http.StatusUnauthorized, codes.NewError("oauth", err))
 		return
 	}
 
 	// introspect the token
 	resp, err := introspectToken(c, client)
 	if err != nil {
-		c.JSON(common.GetErrStatusCode(err), common.NewError("oauth", err))
+		c.JSON(codes.GetErrStatusCode(err), codes.NewError("oauth", err))
 		return
 	}
 
@@ -94,8 +95,8 @@ func authorizationCodeGrant(c *gin.Context, client *models.OauthClient) (*Access
 	serializer := AccessTokenSerializer{
 		accessToken,
 		refreshToken,
-		config.GetConfig().Oauth.AccessTokenLifetime,
-		common.TOKEN_TYPE_BEARER,
+		configmgr.GetConfig().Oauth.AccessTokenLifetime,
+		enums.TOKEN_TYPE_BEARER,
 	}
 
 	return serializer.Response()
@@ -111,7 +112,7 @@ func passwordGrant(c *gin.Context, client *models.OauthClient) (*AccessTokenResp
 	// Authenticate the user
 	user, err := AuthUser(c.Request.FormValue("username"), c.Request.FormValue("password"))
 	if err != nil {
-		return nil, common.ErrInvalidUsernameOrPassword
+		return nil, codes.ErrInvalidUsernameOrPassword
 	}
 
 	// login the user
@@ -124,8 +125,8 @@ func passwordGrant(c *gin.Context, client *models.OauthClient) (*AccessTokenResp
 	serializer := AccessTokenSerializer{
 		accessToken,
 		refreshToken,
-		config.GetConfig().Oauth.AccessTokenLifetime,
-		common.TOKEN_TYPE_BEARER,
+		configmgr.GetConfig().Oauth.AccessTokenLifetime,
+		enums.TOKEN_TYPE_BEARER,
 	}
 
 	return serializer.Response()
@@ -138,7 +139,7 @@ func clientCredentialsGrant(c *gin.Context, client *models.OauthClient) (*Access
 		return nil, err
 	}
 
-	accessToken, err := GrantAccessToken(client, nil, config.GetConfig().Oauth.AccessTokenLifetime, scope)
+	accessToken, err := GrantAccessToken(client, nil, configmgr.GetConfig().Oauth.AccessTokenLifetime, scope)
 	if err != nil {
 		return nil, err
 	}
@@ -147,8 +148,8 @@ func clientCredentialsGrant(c *gin.Context, client *models.OauthClient) (*Access
 	serializer := AccessTokenSerializer{
 		accessToken,
 		nil,
-		config.GetConfig().Oauth.AccessTokenLifetime,
-		common.TOKEN_TYPE_BEARER,
+		configmgr.GetConfig().Oauth.AccessTokenLifetime,
+		enums.TOKEN_TYPE_BEARER,
 	}
 
 	return serializer.Response()
@@ -181,8 +182,8 @@ func refreshTokenGrant(c *gin.Context, client *models.OauthClient) (*AccessToken
 	serializer := AccessTokenSerializer{
 		accessToken,
 		refreshToken,
-		config.GetConfig().Oauth.AccessTokenLifetime,
-		common.TOKEN_TYPE_BEARER,
+		configmgr.GetConfig().Oauth.AccessTokenLifetime,
+		enums.TOKEN_TYPE_BEARER,
 	}
 
 	return serializer.Response()
@@ -192,13 +193,13 @@ func basicAuthClient(c *gin.Context) (*models.OauthClient, error) {
 	// Get client credentials from basic auth
 	name, pwd, ok := c.Request.BasicAuth()
 	if !ok {
-		return nil, common.ErrInvalidClientIDOrSecret
+		return nil, codes.ErrInvalidClientIDOrSecret
 	}
 
 	// Authenticate the client
 	client, err := authClient(name, pwd)
 	if err != nil {
-		return nil, common.ErrInvalidClientIDOrSecret
+		return nil, codes.ErrInvalidClientIDOrSecret
 	}
 
 	return client, nil
@@ -213,10 +214,10 @@ func AuthUser(uname, upwd string) (*models.OauthUser, error) {
 
 	//Verify the password
 	if !user.Password.Valid {
-		return nil, common.ErrUserPasswordNotSet
+		return nil, codes.ErrUserPasswordNotSet
 	}
-	if util.VerifyPassword(user.Password.String, upwd) != nil {
-		return nil, common.ErrInvalidUserPassword
+	if utils.VerifyPassword(user.Password.String, upwd) != nil {
+		return nil, codes.ErrInvalidUserPassword
 	}
 
 	return user, nil
@@ -233,7 +234,7 @@ func GenerateTokens(client *models.OauthClient, user *models.OauthUser, scope st
 	accessToken, err := GrantAccessToken(
 		client,
 		user,
-		config.GetConfig().Oauth.AccessTokenLifetime,
+		configmgr.GetConfig().Oauth.AccessTokenLifetime,
 		scope,
 	)
 	if err != nil {
@@ -243,7 +244,7 @@ func GenerateTokens(client *models.OauthClient, user *models.OauthUser, scope st
 	refreshToken, err := grantRefreshToken(
 		client,
 		user,
-		config.GetConfig().Oauth.RefreshTokenLifetime,
+		configmgr.GetConfig().Oauth.RefreshTokenLifetime,
 		scope,
 	)
 	if err != nil {
@@ -262,13 +263,13 @@ func introspectToken(c *gin.Context, client *models.OauthClient) (*IntrospectRes
 	// Get token from the query
 	token := c.Request.FormValue("token")
 	if token == "" {
-		return nil, common.ErrTokenMissing
+		return nil, codes.ErrTokenMissing
 	}
 
 	// Get token type hint from the query
 	tokenTypeHint := c.Request.FormValue("token_type_hint")
 	if tokenTypeHint == "" {
-		tokenTypeHint = common.ACCESSTOKEN_HINT
+		tokenTypeHint = enums.ACCESSTOKEN_HINT
 	}
 
 	var accessToken *models.OauthAccessToken
@@ -276,12 +277,12 @@ func introspectToken(c *gin.Context, client *models.OauthClient) (*IntrospectRes
 	var err error
 
 	switch tokenTypeHint {
-	case common.ACCESSTOKEN_HINT:
+	case enums.ACCESSTOKEN_HINT:
 		accessToken, err = ValidateAccessToken(token)
-	case common.REFRESHTOKEN_HINT:
+	case enums.REFRESHTOKEN_HINT:
 		refreshToken, err = ValidateRefreshToken(token, client)
 	default:
-		err = common.ErrTokenHintInvalid
+		err = codes.ErrTokenHintInvalid
 	}
 
 	if err != nil {

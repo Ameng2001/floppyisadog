@@ -5,8 +5,8 @@ import (
 	// "strings"
 
 	"github.com/RichardKnop/go-fixtures"
-	"github.com/floppyisadog/foauthserver/util/config"
-	"github.com/floppyisadog/foauthserver/util/database"
+	"github.com/floppyisadog/appcommon/utils/database"
+	"github.com/floppyisadog/foauthserver/managers/configmgr"
 )
 
 // LoadData loads fixtures
@@ -40,13 +40,22 @@ import (
 // }
 
 func LoadData(paths []string, configFile string) error {
-	config.InitConfig(configFile)
+	configmgr.InitConfig(configFile)
 
-	db, err := database.InitDB(config.GetConfig())
+	dbcf := configmgr.GetConfig().Database
+	db, err := database.InitDB(dbcf.Type,
+		dbcf.User,
+		dbcf.Password,
+		dbcf.Host,
+		dbcf.DatabaseName,
+		dbcf.Port,
+		dbcf.MaxIdleConns,
+		dbcf.MaxOpenConns,
+		configmgr.GetConfig().IsDevelopment)
 	if err != nil {
 		return err
 	}
 
 	defer db.Close()
-	return fixtures.LoadFiles(paths, db.DB(), config.GetConfig().Database.Type)
+	return fixtures.LoadFiles(paths, db.DB(), dbcf.Type)
 }

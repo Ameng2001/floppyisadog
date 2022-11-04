@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"path": "accountserver"
+		},
+		{
+			"path": "foauthserver"
+		},
+		{
+			"path": "companyserver"
+		},
+		{
+			"path": "appcommon"
+		},
+		{
+			"path": "botserver"
+		},
+		{
+			"path": "smsserver"
+		},
+		{
+			"path": "emailserver"
+		}
+	],
+	"settings": {}
+}

@@ -5,14 +5,14 @@ import (
 	"os"
 
 	"github.com/TarsCloud/TarsGo/tars"
+	"github.com/floppyisadog/appcommon/utils"
+	"github.com/floppyisadog/appcommon/utils/database"
+	"github.com/floppyisadog/foauthserver/managers/configmgr"
 	"github.com/floppyisadog/foauthserver/services/health"
 	"github.com/floppyisadog/foauthserver/services/oauth"
 	"github.com/floppyisadog/foauthserver/services/user"
 	"github.com/floppyisadog/foauthserver/services/web"
-	"github.com/floppyisadog/foauthserver/tars-protocol/floppyisadog"
-	"github.com/floppyisadog/foauthserver/util"
-	"github.com/floppyisadog/foauthserver/util/config"
-	"github.com/floppyisadog/foauthserver/util/database"
+	"github.com/floppyisadog/foauthserver/tars-protocol/foauthserver"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -36,7 +36,7 @@ func main() {
 		os.Exit(-1)
 	}
 
-	app := new(floppyisadog.Foauth)
+	app := new(foauthserver.Foauth)
 	app.AddServantWithContext(imp, cfg.App+"."+cfg.Server+".FoauthObj")
 
 	//03: Add some customized commands
@@ -44,10 +44,19 @@ func main() {
 
 	//04: Load the server level config file and init database
 	tars.AddConfig("foauthserver.conf")
-	config.InitConfig(cfg.BasePath + "foauthserver.conf")
+	configmgr.InitConfig(cfg.BasePath + "foauthserver.conf")
 
 	//05: Init database
-	db, err := database.InitDB(config.GetConfig())
+	dbcf := configmgr.GetConfig().Database
+	db, err := database.InitDB(dbcf.Type,
+		dbcf.User,
+		dbcf.Password,
+		dbcf.Host,
+		dbcf.DatabaseName,
+		dbcf.Port,
+		dbcf.MaxIdleConns,
+		dbcf.MaxOpenConns,
+		configmgr.GetConfig().IsDevelopment)
 	if err != nil {
 		fmt.Printf("Init database error, err:(%s)\n", err)
 		os.Exit(-1)
@@ -62,7 +71,7 @@ func main() {
 	r.Use(gzip.Gzip(gzip.DefaultCompression))
 
 	//r.LoadHTMLGlob(cfg.BasePath + "template/**/*")
-	util.LoadTemplates(cfg.BasePath)
+	utils.LoadTemplates(cfg.BasePath)
 	r.Static("/assets", cfg.BasePath+"assets")
 
 	//07: Registe routes, use cookie as session

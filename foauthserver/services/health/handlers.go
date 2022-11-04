@@ -3,7 +3,7 @@ package health
 import (
 	"net/http"
 
-	"github.com/floppyisadog/foauthserver/util/database"
+	"github.com/floppyisadog/appcommon/utils/database"
 	"github.com/gin-gonic/gin"
 )
 

@@ -6,11 +6,11 @@ import (
 	"time"
 
 	"github.com/RichardKnop/uuid"
-	"github.com/floppyisadog/foauthserver/common"
+	"github.com/floppyisadog/appcommon/codes"
+	"github.com/floppyisadog/appcommon/utils"
+	"github.com/floppyisadog/appcommon/utils/database"
+	"github.com/floppyisadog/foauthserver/managers/configmgr"
 	"github.com/floppyisadog/foauthserver/models"
-	"github.com/floppyisadog/foauthserver/util"
-	"github.com/floppyisadog/foauthserver/util/config"
-	"github.com/floppyisadog/foauthserver/util/database"
 	"github.com/jinzhu/gorm"
 )
 
@@ -19,12 +19,12 @@ func authClient(clientID, secret string) (*models.OauthClient, error) {
 	// Fetch the client
 	client, err := FindClientByClientKey(clientID)
 	if err != nil {
-		return nil, common.ErrClientNotFound
+		return nil, codes.ErrClientNotFound
 	}
 
 	// Verify the secret
-	if util.VerifyPassword(client.ClientSecret, secret) != nil {
-		return nil, common.ErrInvalidClientSecret
+	if utils.VerifyPassword(client.ClientSecret, secret) != nil {
+		return nil, codes.ErrInvalidClientSecret
 	}
 
 	return client, nil
@@ -35,7 +35,7 @@ func FindClientByClientKey(clientID string) (*models.OauthClient, error) {
 	notFound := database.GetDB().Where("client_key = LOWER(?)", clientID).First(client).RecordNotFound()
 
 	if notFound {
-		return nil, common.ErrClientNotFound
+		return nil, codes.ErrClientNotFound
 	}
 
 	return client, nil
@@ -47,7 +47,7 @@ func FindClientByID(id string) (*models.OauthClient, error) {
 		First(client).RecordNotFound()
 
 	if nofound {
-		return nil, common.ErrUserNotFound
+		return nil, codes.ErrUserNotFound
 	}
 
 	return client, nil
@@ -66,27 +66,27 @@ func CreateUser(roleid, username, password string) (*models.OauthUser, error) {
 			ID:        uuid.New(),
 			CreatedAt: time.Now().UTC(),
 		},
-		RoleID:   util.StringOrNull(roleid),
+		RoleID:   utils.StringOrNull(roleid),
 		Username: strings.ToLower(username),
-		Password: util.StringOrNull(""),
+		Password: utils.StringOrNull(""),
 	}
 
 	if password != "" {
-		if len(password) < config.GetConfig().MinPwdLength {
-			return nil, common.ErrPasswordTooShort
+		if len(password) < configmgr.GetConfig().MinPwdLength {
+			return nil, codes.ErrPasswordTooShort
 		}
 
-		passwordHash, err := util.HashPassword(password)
+		passwordHash, err := utils.HashPassword(password)
 		if err != nil {
 			return nil, err
 		}
 
-		user.Password = util.StringOrNull(string(passwordHash))
+		user.Password = utils.StringOrNull(string(passwordHash))
 	}
 
 	//check the username is valid
 	if UserExists(user.Username) {
-		return nil, common.ErrUsernameTaken
+		return nil, codes.ErrUsernameTaken
 	}
 
 	//create the user in the db
@@ -103,7 +103,7 @@ func FindUserByUserName(usrname string) (*models.OauthUser, error) {
 		First(user).RecordNotFound()
 
 	if nofound {
-		return nil, common.ErrUserNotFound
+		return nil, codes.ErrUserNotFound
 	}
 
 	return user, nil
@@ -115,7 +115,7 @@ func findUserByUserID(id string) (*models.OauthUser, error) {
 		First(user).RecordNotFound()
 
 	if nofound {
-		return nil, common.ErrUserNotFound
+		return nil, codes.ErrUserNotFound
 	}
 
 	return user, nil
@@ -125,7 +125,7 @@ func findUserByUserID(id string) (*models.OauthUser, error) {
 // func findRoleByID(id string) (*models.OauthRole, error) {
 // 	role := new(models.OauthRole)
 // 	if database.GetDB().Where("id = ?", id).First(role).RecordNotFound() {
-// 		return nil, common.ErrRoleNotFound
+// 		return nil, codes.ErrRoleNotFound
 // 	}
 
 // 	return role, nil
@@ -152,15 +152,15 @@ func getValidAuthorizationCode(code, redirectURL string, client *models.OauthCli
 		Where("client_id = ?", client.ID).
 		Where("code = ?", code).First(authCode).RecordNotFound()
 	if nofound {
-		return nil, common.ErrAuthorizationCodeNotFound
+		return nil, codes.ErrAuthorizationCodeNotFound
 	}
 
 	if redirectURL != authCode.RedirectURI.String {
-		return nil, common.ErrInvalidRedirectURI
+		return nil, codes.ErrInvalidRedirectURI
 	}
 
 	if time.Now().After(authCode.ExpiresAt) {
-		return nil, common.ErrAuthorizationCodeExpired
+		return nil, codes.ErrAuthorizationCodeExpired
 	}
 
 	return authCode, nil
@@ -180,7 +180,7 @@ func GetScope(requestedScope string) (string, error) {
 		return requestedScope, nil
 	}
 
-	return "", common.ErrInvalidScope
+	return "", codes.ErrInvalidScope
 }
 
 func getDefaultScope() string {
@@ -246,11 +246,11 @@ func ValidateAccessToken(token string) (*models.OauthAccessToken, error) {
 		RecordNotFound()
 
 	if nofound {
-		return nil, common.ErrAccessTokenNotFound
+		return nil, codes.ErrAccessTokenNotFound
 	}
 
 	if time.Now().UTC().After(accessToken.ExpiresAt) {
-		return nil, common.ErrAccessTokenExpired
+		return nil, codes.ErrAccessTokenExpired
 	}
 
 	query := database.GetDB().Model(new(models.OauthRefreshToken)).
@@ -263,7 +263,7 @@ func ValidateAccessToken(token string) (*models.OauthAccessToken, error) {
 	}
 
 	increasedExpiresAt := gorm.NowFunc().Add(
-		time.Duration(config.GetConfig().Oauth.RefreshTokenLifetime) * time.Second,
+		time.Duration(configmgr.GetConfig().Oauth.RefreshTokenLifetime) * time.Second,
 	)
 
 	if err := query.UpdateColumn("expires_at", increasedExpiresAt).Error; err != nil {
@@ -320,11 +320,11 @@ func ValidateRefreshToken(token string, client *models.OauthClient) (*models.Oau
 		RecordNotFound()
 
 	if notfound {
-		return nil, common.ErrRefreshTokenNotFound
+		return nil, codes.ErrRefreshTokenNotFound
 	}
 
 	if time.Now().UTC().After(refreshToken.ExpiresAt) {
-		return nil, common.ErrRefreshTokenExpired
+		return nil, codes.ErrRefreshTokenExpired
 	}
 
 	return refreshToken, nil
@@ -343,8 +343,8 @@ func getRefreshTokenScope(refreshToken *models.OauthRefreshToken, requestScope s
 		}
 	}
 
-	if !util.SpaceDelimitedStringNotGreater(scope, refreshToken.Scope) {
-		return "", common.ErrRequestedScopeCannotBeGreater
+	if !utils.SpaceDelimitedStringNotGreater(scope, refreshToken.Scope) {
+		return "", codes.ErrRequestedScopeCannotBeGreater
 	}
 
 	return scope, nil

@@ -6,57 +6,58 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/floppyisadog/foauthserver/common"
+	"github.com/floppyisadog/appcommon/codes"
+	"github.com/floppyisadog/appcommon/enums"
+	"github.com/floppyisadog/appcommon/utils"
+	"github.com/floppyisadog/foauthserver/managers/configmgr"
 	"github.com/floppyisadog/foauthserver/models"
 	"github.com/floppyisadog/foauthserver/services/oauth"
-	"github.com/floppyisadog/foauthserver/util"
-	"github.com/floppyisadog/foauthserver/util/config"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func registerFormHandler(c *gin.Context) {
-	errMsg := util.OneFlash(c)
-	util.RenderTemplate(c, "register.html", gin.H{
+	errMsg := utils.OneFlash(c)
+	utils.RenderTemplate(c, "register.html", gin.H{
 		"error":       errMsg,
-		"queryString": util.GetQueryString(c.Request.URL.Query()),
+		"queryString": utils.GetQueryString(c.Request.URL.Query()),
 	})
 	// c.HTML(http.StatusOK, "register.html", gin.H{
 	// 	"error":       errMsg,
-	// 	"queryString": util.GetQueryString(c.Request.URL.Query()),
+	// 	"queryString": utils.GetQueryString(c.Request.URL.Query()),
 	// })
 }
 
 func registerHandler(c *gin.Context) {
 	//check the user email hasnot been registered already
 	if oauth.UserExists(c.PostForm("email")) {
-		util.FlashMessage(c, "Email Taken")
+		utils.FlashMessage(c, "Email Taken")
 		c.Redirect(http.StatusFound, c.Request.RequestURI)
 		return
 	}
 
 	//create a user
-	_, err := oauth.CreateUser(common.USER, c.PostForm("email"), c.PostForm("password"))
+	_, err := oauth.CreateUser(enums.USER, c.PostForm("email"), c.PostForm("password"))
 	if err != nil {
-		util.FlashMessage(c, err.Error())
+		utils.FlashMessage(c, err.Error())
 		c.Redirect(http.StatusFound, c.Request.RequestURI)
 		return
 	}
 
 	//redirect to loginpage
-	redirectURI := fmt.Sprintf("%s%s", "login", util.GetQueryString(c.Request.URL.Query()))
+	redirectURI := fmt.Sprintf("%s%s", "login", utils.GetQueryString(c.Request.URL.Query()))
 	c.Redirect(http.StatusFound, redirectURI)
 }
 
 func loginFormHandler(c *gin.Context) {
-	errMsg := util.OneFlash(c)
-	util.RenderTemplate(c, "login.html", gin.H{
+	errMsg := utils.OneFlash(c)
+	utils.RenderTemplate(c, "login.html", gin.H{
 		"error":       errMsg,
-		"queryString": util.GetQueryString(c.Request.URL.Query()),
+		"queryString": utils.GetQueryString(c.Request.URL.Query()),
 	})
 	// c.HTML(http.StatusOK, "login.html", gin.H{
 	// 	"error":       errMsg,
-	// 	"queryString": util.GetQueryString(c.Request.URL.Query()),
+	// 	"queryString": utils.GetQueryString(c.Request.URL.Query()),
 	// })
 }
 
@@ -66,14 +67,14 @@ func loginHandler(c *gin.Context) {
 	//Get the client
 	client, err := oauth.FindClientByClientKey(c.Query("client_id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, common.NewError("login", err))
+		c.JSON(http.StatusBadRequest, codes.NewError("login", err))
 		return
 	}
 
 	//Authenticate the user
 	user, err := oauth.AuthUser(c.PostForm("email"), c.PostForm("password"))
 	if err != nil {
-		util.FlashMessage(c, err.Error())
+		utils.FlashMessage(c, err.Error())
 		c.Redirect(http.StatusFound, c.Request.RequestURI)
 		return
 	}
@@ -81,7 +82,7 @@ func loginHandler(c *gin.Context) {
 	//Get the scope string
 	scope, err := oauth.GetScope(c.Query("scope"))
 	if err != nil {
-		util.FlashMessage(c, err.Error())
+		utils.FlashMessage(c, err.Error())
 		c.Redirect(http.StatusFound, c.Request.RequestURI)
 		return
 	}
@@ -89,7 +90,7 @@ func loginHandler(c *gin.Context) {
 	//Login the user
 	accessToken, refreshToken, err := oauth.GenerateTokens(client, user, scope)
 	if err != nil {
-		util.FlashMessage(c, err.Error())
+		utils.FlashMessage(c, err.Error())
 		c.Redirect(http.StatusFound, c.Request.RequestURI)
 		return
 	}
@@ -113,26 +114,26 @@ func loginHandler(c *gin.Context) {
 }
 
 func authorizeFormHandler(c *gin.Context) {
-	errMsg := util.OneFlash(c)
+	errMsg := utils.OneFlash(c)
 	query := c.Request.URL.Query()
 	query.Set("login_redirect_uri", c.Request.URL.Path)
 
 	client, _, responseType, _, err := authorizeCommon(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, common.NewError("authorize", err))
+		c.JSON(http.StatusBadRequest, codes.NewError("authorize", err))
 		return
 	}
 
-	util.RenderTemplate(c, "authorize.html", gin.H{
+	utils.RenderTemplate(c, "authorize.html", gin.H{
 		"error":       errMsg,
 		"clientID":    client.ClientKey,
-		"queryString": util.GetQueryString(c.Request.URL.Query()),
+		"queryString": utils.GetQueryString(c.Request.URL.Query()),
 		"token":       responseType == "token",
 	})
 	// c.HTML(http.StatusOK, "authorize.html", gin.H{
 	// 	"error":       errMsg,
 	// 	"clientID":    client.ClientKey,
-	// 	"queryString": util.GetQueryString(c.Request.URL.Query()),
+	// 	"queryString": utils.GetQueryString(c.Request.URL.Query()),
 	// 	"token":       responseType == "token",
 	// })
 }
@@ -140,7 +141,7 @@ func authorizeFormHandler(c *gin.Context) {
 func authorizeHandler(c *gin.Context) {
 	client, user, responseType, redirectURI, err := authorizeCommon(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, common.NewError("authorize", err))
+		c.JSON(http.StatusBadRequest, codes.NewError("authorize", err))
 		return
 	}
 
@@ -150,14 +151,14 @@ func authorizeHandler(c *gin.Context) {
 	// Has the resource owner or authorization server denied the request?
 	authorized := len(c.PostForm("allow")) > 0
 	if !authorized {
-		util.ErrorRedirect(c, redirectURI, "access_denied", state, responseType)
+		utils.ErrorRedirect(c, redirectURI, "access_denied", state, responseType)
 		return
 	}
 
 	//Check the requested scope
 	scope, err := oauth.GetScope(c.PostForm("scope"))
 	if err != nil {
-		util.ErrorRedirect(c, redirectURI, "invalid_scope", state, responseType)
+		utils.ErrorRedirect(c, redirectURI, "invalid_scope", state, responseType)
 		return
 	}
 
@@ -168,12 +169,12 @@ func authorizeHandler(c *gin.Context) {
 		authcode, err := oauth.GrantAuthorizationCode(
 			client,
 			user,
-			config.GetConfig().Oauth.AuthCodeLifetime,
+			configmgr.GetConfig().Oauth.AuthCodeLifetime,
 			redirectURI.String(),
 			scope,
 		)
 		if err != nil {
-			util.ErrorRedirect(c, redirectURI, "server_error", state, responseType)
+			utils.ErrorRedirect(c, redirectURI, "server_error", state, responseType)
 			return
 		}
 
@@ -184,7 +185,7 @@ func authorizeHandler(c *gin.Context) {
 			query.Set("state", state)
 		}
 
-		util.RedirectWithQueryString(redirectURI.String(), query, c)
+		utils.RedirectWithQueryString(redirectURI.String(), query, c)
 
 		return
 	}
@@ -192,28 +193,28 @@ func authorizeHandler(c *gin.Context) {
 	if responseType == "token" {
 		lifeTime, err := strconv.Atoi(c.PostForm("lifetime"))
 		if err != nil {
-			util.ErrorRedirect(c, redirectURI, "server_error", state, responseType)
+			utils.ErrorRedirect(c, redirectURI, "server_error", state, responseType)
 			return
 		}
 
 		// Grant access token directly
 		accessToken, err := oauth.GrantAccessToken(client, user, lifeTime, scope)
 		if err != nil {
-			util.ErrorRedirect(c, redirectURI, "server_error", state, responseType)
+			utils.ErrorRedirect(c, redirectURI, "server_error", state, responseType)
 			return
 		}
 
 		// Set query string params for the redirection URL
 		query.Set("access_token", accessToken.Token)
 		query.Set("expires_in", fmt.Sprintf("%d", lifeTime))
-		query.Set("token_type", common.TOKEN_TYPE_BEARER)
+		query.Set("token_type", enums.TOKEN_TYPE_BEARER)
 		query.Set("scope", scope)
 		// Add state param if present (recommended)
 		if state != "" {
 			query.Set("state", state)
 		}
 
-		util.RedirectWithQueryString(redirectURI.String(), query, c)
+		utils.RedirectWithQueryString(redirectURI.String(), query, c)
 	}
 }
 
@@ -229,7 +230,7 @@ func logoutHandler(c *gin.Context) {
 	session.Delete(USER_SESSION_KEY)
 	session.Save()
 
-	util.RedirectWithQueryString("/login", c.Request.URL.Query(), c)
+	utils.RedirectWithQueryString("/login", c.Request.URL.Query(), c)
 }
 
 func authorizeCommon(c *gin.Context) (*models.OauthClient, *models.OauthUser, string, *url.URL, error) {
@@ -238,21 +239,21 @@ func authorizeCommon(c *gin.Context) (*models.OauthClient, *models.OauthUser, st
 	//Get the client
 	client, err := oauth.FindClientByClientKey(c.Query("client_id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, common.NewError("authorize", err))
+		c.JSON(http.StatusBadRequest, codes.NewError("authorize", err))
 		return nil, nil, "", nil, err
 	}
 
 	sessionUser := session.Get(USER_SESSION_KEY).(*UserSession)
 	user, err := oauth.FindUserByUserName(sessionUser.Username)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, common.NewError("authorize", err))
+		c.JSON(http.StatusBadRequest, codes.NewError("authorize", err))
 		return nil, nil, "", nil, err
 	}
 
 	//check the responsetype is either code or token
 	responseType := c.Query("response_type")
 	if responseType != "code" && responseType != "token" {
-		return nil, nil, "", nil, common.ErrIncorrectResponseType
+		return nil, nil, "", nil, codes.ErrIncorrectResponseType
 	}
 
 	// fallback to the client redirect URI if not in query string

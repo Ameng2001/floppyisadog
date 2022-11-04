@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/RichardKnop/uuid"
-	"github.com/floppyisadog/foauthserver/util"
+	"github.com/floppyisadog/appcommon/utils"
 )
 
 // oauth_clients table orm
@@ -112,14 +112,14 @@ func NewOauthRefreshToken(client *OauthClient, user *OauthUser, expiresIn int, s
 			ID:        uuid.New(),
 			CreatedAt: time.Now().UTC(),
 		},
-		ClientID:  util.StringOrNull(string(client.ID)),
+		ClientID:  utils.StringOrNull(string(client.ID)),
 		Token:     uuid.New(),
 		ExpiresAt: time.Now().UTC().Add(time.Duration(expiresIn) * time.Second),
 		Scope:     scope,
 	}
 
 	if user != nil {
-		refreshToken.UserID = util.StringOrNull(string(user.ID))
+		refreshToken.UserID = utils.StringOrNull(string(user.ID))
 	}
 	return refreshToken
 }
@@ -130,13 +130,13 @@ func NewOauthAccessToken(client *OauthClient, user *OauthUser, expiresIn int, sc
 			ID:        uuid.New(),
 			CreatedAt: time.Now().UTC(),
 		},
-		ClientID:  util.StringOrNull(string(client.ID)),
+		ClientID:  utils.StringOrNull(string(client.ID)),
 		Token:     uuid.New(),
 		ExpiresAt: time.Now().UTC().Add(time.Duration(expiresIn) * time.Second),
 		Scope:     scope,
 	}
 	if user != nil {
-		accessToken.UserID = util.StringOrNull(string(user.ID))
+		accessToken.UserID = utils.StringOrNull(string(user.ID))
 	}
 	return accessToken
 }
@@ -147,11 +147,11 @@ func NewOauthAuthorizationCode(client *OauthClient, user *OauthUser, expiresIn i
 			ID:        uuid.New(),
 			CreatedAt: time.Now().UTC(),
 		},
-		ClientID:    util.StringOrNull(string(client.ID)),
-		UserID:      util.StringOrNull(string(user.ID)),
+		ClientID:    utils.StringOrNull(string(client.ID)),
+		UserID:      utils.StringOrNull(string(user.ID)),
 		Code:        uuid.New(),
 		ExpiresAt:   time.Now().UTC().Add(time.Duration(expiresIn) * time.Second),
-		RedirectURI: util.StringOrNull(redirectURI),
+		RedirectURI: utils.StringOrNull(redirectURI),
 		Scope:       scope,
 	}
 }
