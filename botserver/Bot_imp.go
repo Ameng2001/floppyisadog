@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+
+	"github.com/floppyisadog/botserver/tars-protocol/botserver"
 )
 
 // BotImp servant implementation
@@ -21,13 +23,33 @@ func (imp *BotImp) Destroy() {
 	//...
 }
 
-func (imp *BotImp) Add(ctx context.Context, a int32, b int32, c *int32) (int32, error) {
+func (imp *BotImp) OnboardWorker(ctx context.Context, req *botserver.OnboardWorkerRequest) (int32, error) {
 	//Doing something in your function
-	//...
+	//TODO
 	return 0, nil
 }
-func (imp *BotImp) Sub(ctx context.Context, a int32, b int32, c *int32) (int32, error) {
+func (imp *BotImp) AlertNewShift(ctx context.Context, req *botserver.AlertNewShiftRequest) (int32, error) {
 	//Doing something in your function
-	//...
+	//TODO
+	return 0, nil
+}
+func (imp *BotImp) AlertNewShifts(ctx context.Context, req *botserver.AlertNewShiftsRequest) (int32, error) {
+	//Doing something in your function
+	//TODO
+	return 0, nil
+}
+func (imp *BotImp) AlertRemovedShift(ctx context.Context, req *botserver.AlertRemovedShiftRequest) (int32, error) {
+	//Doing something in your function
+	//TODO
+	return 0, nil
+}
+func (imp *BotImp) AlertRemovedShifts(ctx context.Context, req *botserver.AlertRemovedShiftsRequest) (int32, error) {
+	//Doing something in your function
+	//TODO
+	return 0, nil
+}
+func (imp *BotImp) AlertChangedShift(ctx context.Context, req *botserver.AlertChangedShiftRequest) (int32, error) {
+	//Doing something in your function
+	//TODO
 	return 0, nil
 }

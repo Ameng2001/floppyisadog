@@ -1,8 +1,50 @@
+#include "../companyserver/Company.tars"
 module botserver
 {
+	struct OnboardWorkerRequest
+	{
+    	0	require string company_uuid;
+    	1	require string user_uuid;
+	};
+
+	struct AlertNewShiftRequest 
+	{
+    	0	require string user_uuid;
+    	1	require companyserver::ShiftInfo new_shift;
+	};
+
+	struct AlertNewShiftsRequest 
+	{
+    	0	require string user_uuid;
+    	1	require	vector<companyserver::ShiftInfo> new_shifts;
+	};
+
+	struct AlertRemovedShiftRequest 
+	{
+    	0	require	string user_uuid;
+    	1	require companyserver::ShiftInfo old_shift;
+	};
+
+	struct AlertRemovedShiftsRequest 
+	{
+    	0	require string user_uuid;
+    	1	require	vector<companyserver::ShiftInfo> old_shifts;
+	};
+
+	struct AlertChangedShiftRequest 
+	{
+    	0	require string user_uuid;
+    	1	require companyserver::ShiftInfo old_shift;
+    	2	require companyserver::ShiftInfo new_shift;
+	};
+
 	interface Bot
 	{
-	    int Add(int a,int b,out int c); // Some example function
-	    int Sub(int a,int b,out int c); // Some example function
+		int OnboardWorker(OnboardWorkerRequest req);
+  		int AlertNewShift(AlertNewShiftRequest req);
+  		int AlertNewShifts(AlertNewShiftsRequest req);
+  		int AlertRemovedShift(AlertRemovedShiftRequest req);
+  		int AlertRemovedShifts(AlertRemovedShiftsRequest req);
+  		int AlertChangedShift(AlertChangedShiftRequest req);
 	};
 };

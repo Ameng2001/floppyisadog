@@ -33,25 +33,15 @@ type Bot struct {
 	servant m.Servant
 }
 
-// Add is the proxy function for the method defined in the tars file, with the context
-func (obj *Bot) Add(a int32, b int32, c *int32, opts ...map[string]string) (ret int32, err error) {
+// OnboardWorker is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) OnboardWorker(req *OnboardWorkerRequest, opts ...map[string]string) (ret int32, err error) {
 	var (
 		length int32
 		have   bool
 		ty     byte
 	)
 	buf := codec.NewBuffer()
-	err = buf.WriteInt32(a, 1)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(b, 2)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(*c, 3)
+	err = req.WriteBlock(buf, 1)
 	if err != nil {
 		return ret, err
 	}
@@ -67,18 +57,13 @@ func (obj *Bot) Add(a int32, b int32, c *int32, opts ...map[string]string) (ret 
 	tarsResp := new(requestf.ResponsePacket)
 	tarsCtx := context.Background()
 
-	err = obj.servant.TarsInvoke(tarsCtx, 0, "Add", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "OnboardWorker", buf.ToBytes(), statusMap, contextMap, tarsResp)
 	if err != nil {
 		return ret, err
 	}
 
 	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
 	err = readBuf.ReadInt32(&ret, 0, true)
-	if err != nil {
-		return ret, err
-	}
-
-	err = readBuf.ReadInt32(&(*c), 3, true)
 	if err != nil {
 		return ret, err
 	}
@@ -110,25 +95,15 @@ func (obj *Bot) Add(a int32, b int32, c *int32, opts ...map[string]string) (ret 
 	return ret, nil
 }
 
-// AddWithContext is the proxy function for the method defined in the tars file, with the context
-func (obj *Bot) AddWithContext(tarsCtx context.Context, a int32, b int32, c *int32, opts ...map[string]string) (ret int32, err error) {
+// OnboardWorkerWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) OnboardWorkerWithContext(tarsCtx context.Context, req *OnboardWorkerRequest, opts ...map[string]string) (ret int32, err error) {
 	var (
 		length int32
 		have   bool
 		ty     byte
 	)
 	buf := codec.NewBuffer()
-	err = buf.WriteInt32(a, 1)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(b, 2)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(*c, 3)
+	err = req.WriteBlock(buf, 1)
 	if err != nil {
 		return ret, err
 	}
@@ -140,14 +115,13 @@ func (obj *Bot) AddWithContext(tarsCtx context.Context, a int32, b int32, c *int
 		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
 		if traceParamFlag == trace.EnpNormal {
 			value := map[string]interface{}{}
-			value["a"] = a
-			value["b"] = b
+			value["req"] = req
 			p, _ := json.Marshal(value)
 			traceParam = string(p)
 		} else if traceParamFlag == trace.EnpOverMaxLen {
 			traceParam = "{\"trace_param_over_max_len\":true}"
 		}
-		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "Add", 0, traceParam, "")
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "OnboardWorker", 0, traceParam, "")
 	}
 
 	var statusMap map[string]string
@@ -160,7 +134,7 @@ func (obj *Bot) AddWithContext(tarsCtx context.Context, a int32, b int32, c *int
 	}
 
 	tarsResp := new(requestf.ResponsePacket)
-	err = obj.servant.TarsInvoke(tarsCtx, 0, "Add", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "OnboardWorker", buf.ToBytes(), statusMap, contextMap, tarsResp)
 	if err != nil {
 		return ret, err
 	}
@@ -171,24 +145,18 @@ func (obj *Bot) AddWithContext(tarsCtx context.Context, a int32, b int32, c *int
 		return ret, err
 	}
 
-	err = readBuf.ReadInt32(&(*c), 3, true)
-	if err != nil {
-		return ret, err
-	}
-
 	if ok && traceData.TraceCall {
 		var traceParam string
 		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
 		if traceParamFlag == trace.EnpNormal {
 			value := map[string]interface{}{}
 			value[""] = ret
-			value["c"] = *c
 			p, _ := json.Marshal(value)
 			traceParam = string(p)
 		} else if traceParamFlag == trace.EnpOverMaxLen {
 			traceParam = "{\"trace_param_over_max_len\":true}"
 		}
-		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "Add", int(tarsResp.IRet), traceParam, "")
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "OnboardWorker", int(tarsResp.IRet), traceParam, "")
 	}
 
 	if len(opts) == 1 {
@@ -218,25 +186,15 @@ func (obj *Bot) AddWithContext(tarsCtx context.Context, a int32, b int32, c *int
 	return ret, nil
 }
 
-// AddOneWayWithContext is the proxy function for the method defined in the tars file, with the context
-func (obj *Bot) AddOneWayWithContext(tarsCtx context.Context, a int32, b int32, c *int32, opts ...map[string]string) (ret int32, err error) {
+// OnboardWorkerOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) OnboardWorkerOneWayWithContext(tarsCtx context.Context, req *OnboardWorkerRequest, opts ...map[string]string) (ret int32, err error) {
 	var (
 		length int32
 		have   bool
 		ty     byte
 	)
 	buf := codec.NewBuffer()
-	err = buf.WriteInt32(a, 1)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(b, 2)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(*c, 3)
+	err = req.WriteBlock(buf, 1)
 	if err != nil {
 		return ret, err
 	}
@@ -251,7 +209,7 @@ func (obj *Bot) AddOneWayWithContext(tarsCtx context.Context, a int32, b int32, 
 	}
 
 	tarsResp := new(requestf.ResponsePacket)
-	err = obj.servant.TarsInvoke(tarsCtx, 1, "Add", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "OnboardWorker", buf.ToBytes(), statusMap, contextMap, tarsResp)
 	if err != nil {
 		return ret, err
 	}
@@ -283,25 +241,15 @@ func (obj *Bot) AddOneWayWithContext(tarsCtx context.Context, a int32, b int32, 
 	return ret, nil
 }
 
-// Sub is the proxy function for the method defined in the tars file, with the context
-func (obj *Bot) Sub(a int32, b int32, c *int32, opts ...map[string]string) (ret int32, err error) {
+// AlertNewShift is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertNewShift(req *AlertNewShiftRequest, opts ...map[string]string) (ret int32, err error) {
 	var (
 		length int32
 		have   bool
 		ty     byte
 	)
 	buf := codec.NewBuffer()
-	err = buf.WriteInt32(a, 1)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(b, 2)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(*c, 3)
+	err = req.WriteBlock(buf, 1)
 	if err != nil {
 		return ret, err
 	}
@@ -317,18 +265,13 @@ func (obj *Bot) Sub(a int32, b int32, c *int32, opts ...map[string]string) (ret 
 	tarsResp := new(requestf.ResponsePacket)
 	tarsCtx := context.Background()
 
-	err = obj.servant.TarsInvoke(tarsCtx, 0, "Sub", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "AlertNewShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
 	if err != nil {
 		return ret, err
 	}
 
 	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
 	err = readBuf.ReadInt32(&ret, 0, true)
-	if err != nil {
-		return ret, err
-	}
-
-	err = readBuf.ReadInt32(&(*c), 3, true)
 	if err != nil {
 		return ret, err
 	}
@@ -360,25 +303,15 @@ func (obj *Bot) Sub(a int32, b int32, c *int32, opts ...map[string]string) (ret 
 	return ret, nil
 }
 
-// SubWithContext is the proxy function for the method defined in the tars file, with the context
-func (obj *Bot) SubWithContext(tarsCtx context.Context, a int32, b int32, c *int32, opts ...map[string]string) (ret int32, err error) {
+// AlertNewShiftWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertNewShiftWithContext(tarsCtx context.Context, req *AlertNewShiftRequest, opts ...map[string]string) (ret int32, err error) {
 	var (
 		length int32
 		have   bool
 		ty     byte
 	)
 	buf := codec.NewBuffer()
-	err = buf.WriteInt32(a, 1)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(b, 2)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(*c, 3)
+	err = req.WriteBlock(buf, 1)
 	if err != nil {
 		return ret, err
 	}
@@ -390,14 +323,13 @@ func (obj *Bot) SubWithContext(tarsCtx context.Context, a int32, b int32, c *int
 		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
 		if traceParamFlag == trace.EnpNormal {
 			value := map[string]interface{}{}
-			value["a"] = a
-			value["b"] = b
+			value["req"] = req
 			p, _ := json.Marshal(value)
 			traceParam = string(p)
 		} else if traceParamFlag == trace.EnpOverMaxLen {
 			traceParam = "{\"trace_param_over_max_len\":true}"
 		}
-		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "Sub", 0, traceParam, "")
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "AlertNewShift", 0, traceParam, "")
 	}
 
 	var statusMap map[string]string
@@ -410,7 +342,7 @@ func (obj *Bot) SubWithContext(tarsCtx context.Context, a int32, b int32, c *int
 	}
 
 	tarsResp := new(requestf.ResponsePacket)
-	err = obj.servant.TarsInvoke(tarsCtx, 0, "Sub", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "AlertNewShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
 	if err != nil {
 		return ret, err
 	}
@@ -421,24 +353,18 @@ func (obj *Bot) SubWithContext(tarsCtx context.Context, a int32, b int32, c *int
 		return ret, err
 	}
 
-	err = readBuf.ReadInt32(&(*c), 3, true)
-	if err != nil {
-		return ret, err
-	}
-
 	if ok && traceData.TraceCall {
 		var traceParam string
 		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
 		if traceParamFlag == trace.EnpNormal {
 			value := map[string]interface{}{}
 			value[""] = ret
-			value["c"] = *c
 			p, _ := json.Marshal(value)
 			traceParam = string(p)
 		} else if traceParamFlag == trace.EnpOverMaxLen {
 			traceParam = "{\"trace_param_over_max_len\":true}"
 		}
-		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "Sub", int(tarsResp.IRet), traceParam, "")
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "AlertNewShift", int(tarsResp.IRet), traceParam, "")
 	}
 
 	if len(opts) == 1 {
@@ -468,25 +394,15 @@ func (obj *Bot) SubWithContext(tarsCtx context.Context, a int32, b int32, c *int
 	return ret, nil
 }
 
-// SubOneWayWithContext is the proxy function for the method defined in the tars file, with the context
-func (obj *Bot) SubOneWayWithContext(tarsCtx context.Context, a int32, b int32, c *int32, opts ...map[string]string) (ret int32, err error) {
+// AlertNewShiftOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertNewShiftOneWayWithContext(tarsCtx context.Context, req *AlertNewShiftRequest, opts ...map[string]string) (ret int32, err error) {
 	var (
 		length int32
 		have   bool
 		ty     byte
 	)
 	buf := codec.NewBuffer()
-	err = buf.WriteInt32(a, 1)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(b, 2)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(*c, 3)
+	err = req.WriteBlock(buf, 1)
 	if err != nil {
 		return ret, err
 	}
@@ -501,7 +417,839 @@ func (obj *Bot) SubOneWayWithContext(tarsCtx context.Context, a int32, b int32, 
 	}
 
 	tarsResp := new(requestf.ResponsePacket)
-	err = obj.servant.TarsInvoke(tarsCtx, 1, "Sub", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "AlertNewShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// AlertNewShifts is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertNewShifts(req *AlertNewShiftsRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "AlertNewShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// AlertNewShiftsWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertNewShiftsWithContext(tarsCtx context.Context, req *AlertNewShiftsRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "AlertNewShifts", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "AlertNewShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "AlertNewShifts", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// AlertNewShiftsOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertNewShiftsOneWayWithContext(tarsCtx context.Context, req *AlertNewShiftsRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "AlertNewShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// AlertRemovedShift is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertRemovedShift(req *AlertRemovedShiftRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "AlertRemovedShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// AlertRemovedShiftWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertRemovedShiftWithContext(tarsCtx context.Context, req *AlertRemovedShiftRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "AlertRemovedShift", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "AlertRemovedShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "AlertRemovedShift", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// AlertRemovedShiftOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertRemovedShiftOneWayWithContext(tarsCtx context.Context, req *AlertRemovedShiftRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "AlertRemovedShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// AlertRemovedShifts is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertRemovedShifts(req *AlertRemovedShiftsRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "AlertRemovedShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// AlertRemovedShiftsWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertRemovedShiftsWithContext(tarsCtx context.Context, req *AlertRemovedShiftsRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "AlertRemovedShifts", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "AlertRemovedShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "AlertRemovedShifts", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// AlertRemovedShiftsOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertRemovedShiftsOneWayWithContext(tarsCtx context.Context, req *AlertRemovedShiftsRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "AlertRemovedShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// AlertChangedShift is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertChangedShift(req *AlertChangedShiftRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "AlertChangedShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// AlertChangedShiftWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertChangedShiftWithContext(tarsCtx context.Context, req *AlertChangedShiftRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "AlertChangedShift", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "AlertChangedShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "AlertChangedShift", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// AlertChangedShiftOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Bot) AlertChangedShiftOneWayWithContext(tarsCtx context.Context, req *AlertChangedShiftRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "AlertChangedShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
 	if err != nil {
 		return ret, err
 	}
@@ -559,12 +1307,20 @@ func (obj *Bot) AddServantWithContext(imp BotServantWithContext, servantObj stri
 }
 
 type BotServant interface {
-	Add(a int32, b int32, c *int32) (ret int32, err error)
-	Sub(a int32, b int32, c *int32) (ret int32, err error)
+	OnboardWorker(req *OnboardWorkerRequest) (ret int32, err error)
+	AlertNewShift(req *AlertNewShiftRequest) (ret int32, err error)
+	AlertNewShifts(req *AlertNewShiftsRequest) (ret int32, err error)
+	AlertRemovedShift(req *AlertRemovedShiftRequest) (ret int32, err error)
+	AlertRemovedShifts(req *AlertRemovedShiftsRequest) (ret int32, err error)
+	AlertChangedShift(req *AlertChangedShiftRequest) (ret int32, err error)
 }
 type BotServantWithContext interface {
-	Add(tarsCtx context.Context, a int32, b int32, c *int32) (ret int32, err error)
-	Sub(tarsCtx context.Context, a int32, b int32, c *int32) (ret int32, err error)
+	OnboardWorker(tarsCtx context.Context, req *OnboardWorkerRequest) (ret int32, err error)
+	AlertNewShift(tarsCtx context.Context, req *AlertNewShiftRequest) (ret int32, err error)
+	AlertNewShifts(tarsCtx context.Context, req *AlertNewShiftsRequest) (ret int32, err error)
+	AlertRemovedShift(tarsCtx context.Context, req *AlertRemovedShiftRequest) (ret int32, err error)
+	AlertRemovedShifts(tarsCtx context.Context, req *AlertRemovedShiftsRequest) (ret int32, err error)
+	AlertChangedShift(tarsCtx context.Context, req *AlertChangedShiftRequest) (ret int32, err error)
 }
 
 // Dispatch is used to call the server side implement for the method defined in the tars file. withContext shows using context or not.
@@ -577,19 +1333,12 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 	readBuf := codec.NewReader(tools.Int8ToByte(tarsReq.SBuffer))
 	buf := codec.NewBuffer()
 	switch tarsReq.SFuncName {
-	case "Add":
-		var a int32
-		var b int32
-		var c int32
+	case "OnboardWorker":
+		var req OnboardWorkerRequest
 
 		if tarsReq.IVersion == basef.TARSVERSION {
 
-			err = readBuf.ReadInt32(&a, 1, true)
-			if err != nil {
-				return err
-			}
-
-			err = readBuf.ReadInt32(&b, 2, true)
+			err = req.ReadBlock(readBuf, 1, true)
 			if err != nil {
 				return err
 			}
@@ -600,16 +1349,9 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 
 			var tupBuffer []byte
 
-			reqTup.GetBuffer("a", &tupBuffer)
+			reqTup.GetBuffer("req", &tupBuffer)
 			readBuf.Reset(tupBuffer)
-			err = readBuf.ReadInt32(&a, 0, true)
-			if err != nil {
-				return err
-			}
-
-			reqTup.GetBuffer("b", &tupBuffer)
-			readBuf.Reset(tupBuffer)
-			err = readBuf.ReadInt32(&b, 0, true)
+			err = req.ReadBlock(readBuf, 0, true)
 			if err != nil {
 				return err
 			}
@@ -623,14 +1365,9 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
 			}
 			{
-				jsonStr, _ := json.Marshal(jsonData["a"])
-				if err = json.Unmarshal(jsonStr, &a); err != nil {
-					return err
-				}
-			}
-			{
-				jsonStr, _ := json.Marshal(jsonData["b"])
-				if err = json.Unmarshal(jsonStr, &b); err != nil {
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
 					return err
 				}
 			}
@@ -646,23 +1383,22 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
 			if traceParamFlag == trace.EnpNormal {
 				value := map[string]interface{}{}
-				value["a"] = a
-				value["b"] = b
+				value["req"] = req
 				p, _ := json.Marshal(value)
 				traceParam = string(p)
 			} else if traceParamFlag == trace.EnpOverMaxLen {
 				traceParam = "{\"trace_param_over_max_len\":true}"
 			}
-			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "Add", 0, traceParam, "")
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "OnboardWorker", 0, traceParam, "")
 		}
 
 		var funRet int32
 		if !withContext {
 			imp := val.(BotServant)
-			funRet, err = imp.Add(a, b, &c)
+			funRet, err = imp.OnboardWorker(&req)
 		} else {
 			imp := val.(BotServantWithContext)
-			funRet, err = imp.Add(tarsCtx, a, b, &c)
+			funRet, err = imp.OnboardWorker(tarsCtx, &req)
 		}
 
 		if err != nil {
@@ -673,11 +1409,6 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 			buf.Reset()
 
 			err = buf.WriteInt32(funRet, 0)
-			if err != nil {
-				return err
-			}
-
-			err = buf.WriteInt32(c, 3)
 			if err != nil {
 				return err
 			}
@@ -694,14 +1425,6 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 			rspTup.PutBuffer("tars_ret", buf.ToBytes())
 
 			buf.Reset()
-			err = buf.WriteInt32(c, 0)
-			if err != nil {
-				return err
-			}
-
-			rspTup.PutBuffer("c", buf.ToBytes())
-
-			buf.Reset()
 			err = rspTup.Encode(buf)
 			if err != nil {
 				return err
@@ -709,7 +1432,6 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 		} else if tarsReq.IVersion == basef.JSONVERSION {
 			rspJson := map[string]interface{}{}
 			rspJson["tars_ret"] = funRet
-			rspJson["c"] = c
 
 			var rspByte []byte
 			if rspByte, err = json.Marshal(rspJson); err != nil {
@@ -729,28 +1451,20 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 			if traceParamFlag == trace.EnpNormal {
 				value := map[string]interface{}{}
 				value[""] = funRet
-				value["c"] = c
 				p, _ := json.Marshal(value)
 				traceParam = string(p)
 			} else if traceParamFlag == trace.EnpOverMaxLen {
 				traceParam = "{\"trace_param_over_max_len\":true}"
 			}
-			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "Add", 0, traceParam, "")
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "OnboardWorker", 0, traceParam, "")
 		}
 
-	case "Sub":
-		var a int32
-		var b int32
-		var c int32
+	case "AlertNewShift":
+		var req AlertNewShiftRequest
 
 		if tarsReq.IVersion == basef.TARSVERSION {
 
-			err = readBuf.ReadInt32(&a, 1, true)
-			if err != nil {
-				return err
-			}
-
-			err = readBuf.ReadInt32(&b, 2, true)
+			err = req.ReadBlock(readBuf, 1, true)
 			if err != nil {
 				return err
 			}
@@ -761,16 +1475,9 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 
 			var tupBuffer []byte
 
-			reqTup.GetBuffer("a", &tupBuffer)
+			reqTup.GetBuffer("req", &tupBuffer)
 			readBuf.Reset(tupBuffer)
-			err = readBuf.ReadInt32(&a, 0, true)
-			if err != nil {
-				return err
-			}
-
-			reqTup.GetBuffer("b", &tupBuffer)
-			readBuf.Reset(tupBuffer)
-			err = readBuf.ReadInt32(&b, 0, true)
+			err = req.ReadBlock(readBuf, 0, true)
 			if err != nil {
 				return err
 			}
@@ -784,14 +1491,9 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
 			}
 			{
-				jsonStr, _ := json.Marshal(jsonData["a"])
-				if err = json.Unmarshal(jsonStr, &a); err != nil {
-					return err
-				}
-			}
-			{
-				jsonStr, _ := json.Marshal(jsonData["b"])
-				if err = json.Unmarshal(jsonStr, &b); err != nil {
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
 					return err
 				}
 			}
@@ -807,23 +1509,22 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
 			if traceParamFlag == trace.EnpNormal {
 				value := map[string]interface{}{}
-				value["a"] = a
-				value["b"] = b
+				value["req"] = req
 				p, _ := json.Marshal(value)
 				traceParam = string(p)
 			} else if traceParamFlag == trace.EnpOverMaxLen {
 				traceParam = "{\"trace_param_over_max_len\":true}"
 			}
-			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "Sub", 0, traceParam, "")
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "AlertNewShift", 0, traceParam, "")
 		}
 
 		var funRet int32
 		if !withContext {
 			imp := val.(BotServant)
-			funRet, err = imp.Sub(a, b, &c)
+			funRet, err = imp.AlertNewShift(&req)
 		} else {
 			imp := val.(BotServantWithContext)
-			funRet, err = imp.Sub(tarsCtx, a, b, &c)
+			funRet, err = imp.AlertNewShift(tarsCtx, &req)
 		}
 
 		if err != nil {
@@ -834,11 +1535,6 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 			buf.Reset()
 
 			err = buf.WriteInt32(funRet, 0)
-			if err != nil {
-				return err
-			}
-
-			err = buf.WriteInt32(c, 3)
 			if err != nil {
 				return err
 			}
@@ -855,14 +1551,6 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 			rspTup.PutBuffer("tars_ret", buf.ToBytes())
 
 			buf.Reset()
-			err = buf.WriteInt32(c, 0)
-			if err != nil {
-				return err
-			}
-
-			rspTup.PutBuffer("c", buf.ToBytes())
-
-			buf.Reset()
 			err = rspTup.Encode(buf)
 			if err != nil {
 				return err
@@ -870,7 +1558,6 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 		} else if tarsReq.IVersion == basef.JSONVERSION {
 			rspJson := map[string]interface{}{}
 			rspJson["tars_ret"] = funRet
-			rspJson["c"] = c
 
 			var rspByte []byte
 			if rspByte, err = json.Marshal(rspJson); err != nil {
@@ -890,13 +1577,516 @@ func (obj *Bot) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *requ
 			if traceParamFlag == trace.EnpNormal {
 				value := map[string]interface{}{}
 				value[""] = funRet
-				value["c"] = c
 				p, _ := json.Marshal(value)
 				traceParam = string(p)
 			} else if traceParamFlag == trace.EnpOverMaxLen {
 				traceParam = "{\"trace_param_over_max_len\":true}"
 			}
-			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "Sub", 0, traceParam, "")
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "AlertNewShift", 0, traceParam, "")
+		}
+
+	case "AlertNewShifts":
+		var req AlertNewShiftsRequest
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "AlertNewShifts", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(BotServant)
+			funRet, err = imp.AlertNewShifts(&req)
+		} else {
+			imp := val.(BotServantWithContext)
+			funRet, err = imp.AlertNewShifts(tarsCtx, &req)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "AlertNewShifts", 0, traceParam, "")
+		}
+
+	case "AlertRemovedShift":
+		var req AlertRemovedShiftRequest
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "AlertRemovedShift", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(BotServant)
+			funRet, err = imp.AlertRemovedShift(&req)
+		} else {
+			imp := val.(BotServantWithContext)
+			funRet, err = imp.AlertRemovedShift(tarsCtx, &req)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "AlertRemovedShift", 0, traceParam, "")
+		}
+
+	case "AlertRemovedShifts":
+		var req AlertRemovedShiftsRequest
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "AlertRemovedShifts", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(BotServant)
+			funRet, err = imp.AlertRemovedShifts(&req)
+		} else {
+			imp := val.(BotServantWithContext)
+			funRet, err = imp.AlertRemovedShifts(tarsCtx, &req)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "AlertRemovedShifts", 0, traceParam, "")
+		}
+
+	case "AlertChangedShift":
+		var req AlertChangedShiftRequest
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "AlertChangedShift", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(BotServant)
+			funRet, err = imp.AlertChangedShift(&req)
+		} else {
+			imp := val.(BotServantWithContext)
+			funRet, err = imp.AlertChangedShift(tarsCtx, &req)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "AlertChangedShift", 0, traceParam, "")
 		}
 
 	default:
