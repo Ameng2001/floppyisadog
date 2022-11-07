@@ -1,8 +1,114 @@
 module accountserver
 {
+	struct Timestamp
+	{
+		0	require	long	seconds;
+		1	require	int	nanos;
+	};
+
+	struct AccountInfo
+	{
+		0	require	string uuid;
+		1	require	string name;
+  		2	require	string email;
+  		3	require	bool confirmed_and_active;
+		4	require	Timestamp member_since;
+		5	require	bool support;
+		6	require	string phonenumber;
+		7	require	string photo_url;
+	};
+
+	struct UpdatePasswordRequest 
+	{
+		0	require	string uuid;
+		1	require	string password;
+	};
+
+	struct VerifyPasswordRequest 
+	{
+		0	require	string email;
+		1	require	string password;
+	};
+
+	struct AccountList 
+	{
+		0	require	vector<AccountInfo>	accounts;
+		1	require	int limit;
+		2	require	int offset;
+	};
+
+	struct GetAccountListRequest 
+	{
+  		0	require	int offset;
+  		1	require	int limit;
+	};
+
+	struct CreateAccountRequest 
+	{
+		0	require	string name;
+		1	require	string email;
+		2	require	string phonenumber;
+	};
+
+	struct GetAccountRequest 
+	{
+  		0	require	string uuid;
+	};
+
+	struct GetAccountByPhonenumberRequest 
+	{
+		0	require	string phonenumber;
+	};
+
+	struct PasswordResetRequest 
+	{
+  		0	require	string email;
+	};
+
+	struct EmailChangeRequest 
+	{
+  		0	require	string uuid;
+  		1	require	string email;
+	};
+
+	struct EmailConfirmation 
+	{
+  		0	require	string uuid;
+  		1	require	string email;
+	};
+
+	struct GetOrCreateRequest 
+	{
+  		0	require	string name;
+  		1	require	string email;
+  		2	require	string phonenumber;
+	};
+
+	struct TrackEventRequest 
+	{
+		0	require	string uuid;
+		1	require	string event;
+	};
+
+	struct SyncUserRequest 
+	{
+		0	require	string uuid;
+	};
+
 	interface Account
 	{
-	    int Add(int a,int b,out int c); // Some example function
-	    int Sub(int a,int b,out int c); // Some example function
+	    int Create(CreateAccountRequest req, out AccountInfo rsp);
+	    int List(GetAccountListRequest req, out AccountList rsp);
+		int Get(GetAccountRequest req, out AccountInfo rsp);
+		int Update(AccountInfo req);
+		int UpdatePassword(UpdatePasswordRequest req);
+		int RequestPasswordReset(PasswordResetRequest req);
+		int RequestEmailChange(EmailChangeRequest req);
+		int VerifyPassword(VerifyPasswordRequest req, out AccountInfo rsp);
+		int ChangeEmail(EmailConfirmation req);
+		int GetOrCreate(GetOrCreateRequest req, out AccountInfo rsp);
+		int GetAccountByPhonenumber(GetAccountByPhonenumberRequest req, AccountInfo rsp);
+		int TrackEvent(TrackEventRequest req);
+		int SyncUser(SyncUserRequest req);
 	};
 };

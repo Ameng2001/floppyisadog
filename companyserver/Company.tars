@@ -1,8 +1,365 @@
 module companyserver
 {
+	struct Timestamp
+	{
+		0	require	long	seconds;
+		1	require	int	nanos;
+	};
+
+	struct CompanyInfo 
+	{
+  		0	require	string uuid;
+  		1	require	string name;
+  		3	require	bool archived;
+  		4	require	string default_timezone;
+  		5	require	string default_day_week_starts;
+	};
+
+	struct CompanyList 
+	{
+		0	require vector<CompanyInfo> companies;
+		1	require	int limit;
+		2	require	int offset;
+	};
+
+	struct CompanyListRequest 
+	{
+  		0	require	int offset;
+  		1	require	int limit;
+	};
+
+	struct CreateCompanyRequest 
+	{
+		0	require	string name;
+		1	require	string default_timezone;
+		2	require string default_day_week_starts;
+	};
+
+	struct GetCompanyRequest 
+	{
+  		0	require	string uuid;
+	};
+
+	struct TeamInfo 
+	{
+		0	require	string uuid;
+		1	require	string company_uuid;
+		2	require	string name;
+  		3	require	bool archived;
+  		4	require	string timezone;
+  		5	require	string day_week_starts;
+		6	require	string color;
+	};
+
+	struct TeamList 
+	{
+		0	require	vector<TeamInfo> teams;
+	};
+
+	struct TeamListRequest 
+	{
+		0	require	string company_uuid;
+	};
+
+	struct CreateTeamRequest 
+	{
+		0	require	string company_uuid;
+		1	require	string name;
+		2	require	string timezone;
+		3	require	string day_week_starts;
+		4	require	string color;
+	};
+
+	struct GetTeamRequest 
+	{
+  		0	require	string company_uuid;
+  		1	require	string uuid;
+	};
+
+	struct JobInfo
+	{
+		0	require	string uuid;
+		1	require	string company_uuid;
+		2	require	string team_uuid;
+		3	require	string name;
+		4	require	bool archived;
+		5	require	string color;
+	};
+
+	struct JobList 
+	{
+		0	require	vector<JobInfo> jobs;
+	};
+
+	struct JobListRequest 
+	{
+		0	require	string company_uuid;
+		1	require	string team_uuid;
+	};
+
+	struct CreateJobRequest 
+	{
+		0	require	string company_uuid;
+		1	require	string team_uuid;
+		2	require	string name;
+		3	require	string color;
+	};
+
+	struct GetJobRequest 
+	{
+		0	require	string uuid;
+		1	require	string company_uuid;
+		2	require	string team_uuid;
+	};
+
+	struct ShiftInfo 
+	{
+  		0	require	string uuid;
+  		1	require	string company_uuid;
+  		2	require	string team_uuid;
+  		3	require Timestamp start;
+  		4	require	Timestamp stop;
+  		5	require	string user_uuid;
+  		6	require	string job_uuid;
+  		7	require	bool published;
+	};
+
+	struct ShiftList 
+	{
+  		0	require vector<ShiftInfo> shifts;
+		1	require	Timestamp shift_start_after;
+		2	require	Timestamp shift_start_before;
+	};
+
+	struct ShiftListRequest 
+	{
+  		0	require	string company_uuid;
+  		1	require	string team_uuid;
+  		2	require	string user_uuid;
+  		3	require	string job_uuid;
+		4	require	string shift_start_after;
+		5	require	string shift_start_before;
+	};
+
+	struct WorkerShiftListRequest 
+	{
+  		0	require	string company_uuid;
+  		1	require	string team_uuid;
+  		2	require	string worker_uuid;
+		3	require	Timestamp shift_start_after;
+		4	require	Timestamp shift_start_before;
+	};
+
+	struct BulkPublishShiftsRequest 
+	{
+  		0	require	string company_uuid;
+  		1	require	string team_uuid;
+  		2	require	string user_uuid;
+  		3	require	string job_uuid;
+		4	require	Timestamp shift_start_after;
+		5	require Timestamp shift_start_before;
+		6	require bool published;
+	};
+
+	struct CreateShiftRequest 
+	{
+  		0	require string company_uuid;
+  		1	require string team_uuid;
+  		2	require Timestamp start;
+  		3	require Timestamp stop;
+  		4	require string user_uuid;
+		5	require string job_uuid;
+		6	require bool published;
+	};
+
+	struct GetShiftRequest 
+	{
+		0	require string uuid;
+		1	require string team_uuid;
+		2	require string company_uuid;
+	};
+
+	// directory
+	struct DirectoryEntry 
+	{
+		0	require string user_uuid;
+		1	require string internal_id;
+		2	require string company_uuid;
+		// coming from account
+		3	require string name;
+  		4	require string email;
+  		5	require bool confirmed_and_active;
+		6	require string phonenumber;
+		7	require string photo_url;
+	};
+
+	struct NewDirectoryEntry 
+	{
+		0	require string company_uuid;
+		1	require string name;
+  		2	require string email;
+  		3	require string phonenumber;
+		4	require string internal_id;
+	};
+
+	struct DirectoryEntryRequest 
+	{
+		0	require string company_uuid;
+		1	require string user_uuid;
+	};
+
+	struct DirectoryList 
+	{
+		0	require vector<DirectoryEntry> accounts;
+		1	require int limit;
+		2	require int offset;
+	};
+
+	struct DirectoryListRequest 
+	{
+		0	require string company_uuid;
+		1	require int limit;
+		2	require int offset;
+	};
+
+	// admins
+	struct AdminListRequest 
+	{
+		0	require string company_uuid;
+	};
+
+	struct Admins 
+	{
+		0	require string company_uuid;
+		1	require vector<DirectoryEntry> admins;
+	};
+
+	struct AdminOfRequest 
+	{
+		0	require string user_uuid;
+	};
+
+	struct AdminOfList 
+	{
+		0	require string user_uuid;
+		1	require vector<CompanyInfo> companies;
+	};
+
+	// workers
+	struct WorkerListRequest 
+	{
+		0	require string company_uuid;
+		1	require string team_uuid;
+	};
+
+	struct Workers 
+	{
+		0	require string company_uuid;
+		1	require string team_uuid;
+		2	require vector<DirectoryEntry> workers;
+	};
+
+	struct Worker 
+	{
+		0	require string company_uuid;
+		1	require string team_uuid;
+		2	require string user_uuid;
+	};
+
+	struct WorkerOfRequest 
+	{
+		0	require string user_uuid;
+	};
+
+	struct WorkerOfList 
+	{
+		0	require string user_uuid;
+		1	require vector<TeamInfo> teams;
+	};
+
+	struct Association 
+	{
+		0	require DirectoryEntry account;
+		1	require vector<TeamInfo> teams;
+		2	require bool admin;
+	};
+
+	struct AssociationList 
+	{
+		0	require vector<Association> accounts;
+		1	require int limit;
+		2	require int offset;
+	};
+
+	struct TimeZoneList 
+	{
+  		0	require vector<string> timezones;
+	};
+
+	struct ScheduledPerWeek 
+	{
+  		0	require string week;
+  		1	require int count;
+	};
+
+	struct GrowthGraphResponse 
+	{
+  		0	require map<string, int> people_scheduled_per_week;
+  		1	require int people_on_shifts;
+	};
+
+	//rpc interfaces
 	interface Company
 	{
-	    int Add(int a,int b,out int c); // Some example function
-	    int Sub(int a,int b,out int c); // Some example function
+	    int CreateCompany(CreateCompanyRequest req, out CompanyInfo rsp);
+		int ListCompanies(CompanyListRequest req, out CompanyList rsp);
+		int GetCompany(GetCompanyRequest req, out CompanyInfo rsp);
+		int UpdateCompany(CompanyInfo req);
+
+  		// teams
+		int CreateTeam(CreateTeamRequest req, out TeamInfo rsp);
+		int ListTeams(TeamListRequest req, out TeamList rsp);
+		int GetTeam(GetTeamRequest req, out TeamInfo rsp);
+		int UpdateTeam(TeamInfo req);
+		int GetWorkerTeamInfo(Worker req, out Worker rsp);
+		int CreateJob(CreateJobRequest req, out JobInfo rsp);
+		int ListJobs(JobListRequest req, out JobList rsp);
+		int GetJob(GetJobRequest req, out JobInfo rsp);
+		int UpdateJob(JobInfo req);
+		int CreateShift(CreateShiftRequest req, out ShiftInfo rsp);
+		int ListShifts(ShiftListRequest req, out ShiftList rsp);	
+		int ListWorkerShifts(WorkerShiftListRequest req, out ShiftList rsp);
+		int BulkPublishShifts(BulkPublishShiftsRequest req, out ShiftList rsp);
+		int GetShift(GetShiftRequest req, out ShiftInfo rsp);
+		int DeleteShift(GetShiftRequest req);
+		int UpdateShift(ShiftInfo req, out ShiftInfo rsp);
+
+		// Directory
+		int CreateDirectory(NewDirectoryEntry req, out DirectoryEntry rsp);
+		int Directory(DirectoryListRequest req, out DirectoryList rsp);
+		int GetAssociations(DirectoryListRequest req, out AssociationList rsp);
+		int GetDirectoryEntry(DirectoryEntryRequest req, out DirectoryEntry rsp);
+		int UpdateDirectoryEntry(DirectoryEntry req, out DirectoryEntry rsp);
+	
+		// Admins
+		int ListAdmins(AdminListRequest req, out Admins rsp);
+		int CreateAdmin(DirectoryEntryRequest req, out DirectoryEntry rsp);
+		int GetAdmin(DirectoryEntryRequest req, out DirectoryEntry rsp);
+		int DeleteAdmin(DirectoryEntryRequest req);
+
+		// Workers
+		int ListWorkers(WorkerListRequest req, out Workers rsp);
+		int GetWorker(Worker req, out DirectoryEntry rsp);
+		int DeleteWorker(Worker req);
+		int CreateWorker(Worker req, out DirectoryEntry rsp);
+
+  		// timezones
+		int ListTimeZones(out TimeZoneList rsp);
+	
+  		// growth graph
+		int GrowthGraph(out GrowthGraphResponse rsp);
+	
+		int GetWorkerOf(WorkerOfRequest req, out WorkerOfList rsp);
+		int GetAdminOf(AdminOfRequest req, out AdminOfList rsp);
 	};
 };

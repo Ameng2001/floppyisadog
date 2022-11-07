@@ -33,25 +33,20 @@ type Company struct {
 	servant m.Servant
 }
 
-// Add is the proxy function for the method defined in the tars file, with the context
-func (obj *Company) Add(a int32, b int32, c *int32, opts ...map[string]string) (ret int32, err error) {
+// CreateCompany is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateCompany(req *CreateCompanyRequest, rsp *CompanyInfo, opts ...map[string]string) (ret int32, err error) {
 	var (
 		length int32
 		have   bool
 		ty     byte
 	)
 	buf := codec.NewBuffer()
-	err = buf.WriteInt32(a, 1)
+	err = req.WriteBlock(buf, 1)
 	if err != nil {
 		return ret, err
 	}
 
-	err = buf.WriteInt32(b, 2)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(*c, 3)
+	err = (*rsp).WriteBlock(buf, 2)
 	if err != nil {
 		return ret, err
 	}
@@ -67,7 +62,7 @@ func (obj *Company) Add(a int32, b int32, c *int32, opts ...map[string]string) (
 	tarsResp := new(requestf.ResponsePacket)
 	tarsCtx := context.Background()
 
-	err = obj.servant.TarsInvoke(tarsCtx, 0, "Add", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateCompany", buf.ToBytes(), statusMap, contextMap, tarsResp)
 	if err != nil {
 		return ret, err
 	}
@@ -78,7 +73,7 @@ func (obj *Company) Add(a int32, b int32, c *int32, opts ...map[string]string) (
 		return ret, err
 	}
 
-	err = readBuf.ReadInt32(&(*c), 3, true)
+	err = (*rsp).ReadBlock(readBuf, 2, true)
 	if err != nil {
 		return ret, err
 	}
@@ -110,25 +105,20 @@ func (obj *Company) Add(a int32, b int32, c *int32, opts ...map[string]string) (
 	return ret, nil
 }
 
-// AddWithContext is the proxy function for the method defined in the tars file, with the context
-func (obj *Company) AddWithContext(tarsCtx context.Context, a int32, b int32, c *int32, opts ...map[string]string) (ret int32, err error) {
+// CreateCompanyWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateCompanyWithContext(tarsCtx context.Context, req *CreateCompanyRequest, rsp *CompanyInfo, opts ...map[string]string) (ret int32, err error) {
 	var (
 		length int32
 		have   bool
 		ty     byte
 	)
 	buf := codec.NewBuffer()
-	err = buf.WriteInt32(a, 1)
+	err = req.WriteBlock(buf, 1)
 	if err != nil {
 		return ret, err
 	}
 
-	err = buf.WriteInt32(b, 2)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(*c, 3)
+	err = (*rsp).WriteBlock(buf, 2)
 	if err != nil {
 		return ret, err
 	}
@@ -140,14 +130,13 @@ func (obj *Company) AddWithContext(tarsCtx context.Context, a int32, b int32, c 
 		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
 		if traceParamFlag == trace.EnpNormal {
 			value := map[string]interface{}{}
-			value["a"] = a
-			value["b"] = b
+			value["req"] = req
 			p, _ := json.Marshal(value)
 			traceParam = string(p)
 		} else if traceParamFlag == trace.EnpOverMaxLen {
 			traceParam = "{\"trace_param_over_max_len\":true}"
 		}
-		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "Add", 0, traceParam, "")
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateCompany", 0, traceParam, "")
 	}
 
 	var statusMap map[string]string
@@ -160,7 +149,7 @@ func (obj *Company) AddWithContext(tarsCtx context.Context, a int32, b int32, c 
 	}
 
 	tarsResp := new(requestf.ResponsePacket)
-	err = obj.servant.TarsInvoke(tarsCtx, 0, "Add", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateCompany", buf.ToBytes(), statusMap, contextMap, tarsResp)
 	if err != nil {
 		return ret, err
 	}
@@ -171,7 +160,7 @@ func (obj *Company) AddWithContext(tarsCtx context.Context, a int32, b int32, c 
 		return ret, err
 	}
 
-	err = readBuf.ReadInt32(&(*c), 3, true)
+	err = (*rsp).ReadBlock(readBuf, 2, true)
 	if err != nil {
 		return ret, err
 	}
@@ -182,13 +171,13 @@ func (obj *Company) AddWithContext(tarsCtx context.Context, a int32, b int32, c 
 		if traceParamFlag == trace.EnpNormal {
 			value := map[string]interface{}{}
 			value[""] = ret
-			value["c"] = *c
+			value["rsp"] = *rsp
 			p, _ := json.Marshal(value)
 			traceParam = string(p)
 		} else if traceParamFlag == trace.EnpOverMaxLen {
 			traceParam = "{\"trace_param_over_max_len\":true}"
 		}
-		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "Add", int(tarsResp.IRet), traceParam, "")
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateCompany", int(tarsResp.IRet), traceParam, "")
 	}
 
 	if len(opts) == 1 {
@@ -218,25 +207,20 @@ func (obj *Company) AddWithContext(tarsCtx context.Context, a int32, b int32, c 
 	return ret, nil
 }
 
-// AddOneWayWithContext is the proxy function for the method defined in the tars file, with the context
-func (obj *Company) AddOneWayWithContext(tarsCtx context.Context, a int32, b int32, c *int32, opts ...map[string]string) (ret int32, err error) {
+// CreateCompanyOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateCompanyOneWayWithContext(tarsCtx context.Context, req *CreateCompanyRequest, rsp *CompanyInfo, opts ...map[string]string) (ret int32, err error) {
 	var (
 		length int32
 		have   bool
 		ty     byte
 	)
 	buf := codec.NewBuffer()
-	err = buf.WriteInt32(a, 1)
+	err = req.WriteBlock(buf, 1)
 	if err != nil {
 		return ret, err
 	}
 
-	err = buf.WriteInt32(b, 2)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(*c, 3)
+	err = (*rsp).WriteBlock(buf, 2)
 	if err != nil {
 		return ret, err
 	}
@@ -251,7 +235,7 @@ func (obj *Company) AddOneWayWithContext(tarsCtx context.Context, a int32, b int
 	}
 
 	tarsResp := new(requestf.ResponsePacket)
-	err = obj.servant.TarsInvoke(tarsCtx, 1, "Add", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "CreateCompany", buf.ToBytes(), statusMap, contextMap, tarsResp)
 	if err != nil {
 		return ret, err
 	}
@@ -283,25 +267,20 @@ func (obj *Company) AddOneWayWithContext(tarsCtx context.Context, a int32, b int
 	return ret, nil
 }
 
-// Sub is the proxy function for the method defined in the tars file, with the context
-func (obj *Company) Sub(a int32, b int32, c *int32, opts ...map[string]string) (ret int32, err error) {
+// ListCompanies is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListCompanies(req *CompanyListRequest, rsp *CompanyList, opts ...map[string]string) (ret int32, err error) {
 	var (
 		length int32
 		have   bool
 		ty     byte
 	)
 	buf := codec.NewBuffer()
-	err = buf.WriteInt32(a, 1)
+	err = req.WriteBlock(buf, 1)
 	if err != nil {
 		return ret, err
 	}
 
-	err = buf.WriteInt32(b, 2)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(*c, 3)
+	err = (*rsp).WriteBlock(buf, 2)
 	if err != nil {
 		return ret, err
 	}
@@ -317,7 +296,7 @@ func (obj *Company) Sub(a int32, b int32, c *int32, opts ...map[string]string) (
 	tarsResp := new(requestf.ResponsePacket)
 	tarsCtx := context.Background()
 
-	err = obj.servant.TarsInvoke(tarsCtx, 0, "Sub", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListCompanies", buf.ToBytes(), statusMap, contextMap, tarsResp)
 	if err != nil {
 		return ret, err
 	}
@@ -328,7 +307,7 @@ func (obj *Company) Sub(a int32, b int32, c *int32, opts ...map[string]string) (
 		return ret, err
 	}
 
-	err = readBuf.ReadInt32(&(*c), 3, true)
+	err = (*rsp).ReadBlock(readBuf, 2, true)
 	if err != nil {
 		return ret, err
 	}
@@ -360,25 +339,20 @@ func (obj *Company) Sub(a int32, b int32, c *int32, opts ...map[string]string) (
 	return ret, nil
 }
 
-// SubWithContext is the proxy function for the method defined in the tars file, with the context
-func (obj *Company) SubWithContext(tarsCtx context.Context, a int32, b int32, c *int32, opts ...map[string]string) (ret int32, err error) {
+// ListCompaniesWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListCompaniesWithContext(tarsCtx context.Context, req *CompanyListRequest, rsp *CompanyList, opts ...map[string]string) (ret int32, err error) {
 	var (
 		length int32
 		have   bool
 		ty     byte
 	)
 	buf := codec.NewBuffer()
-	err = buf.WriteInt32(a, 1)
+	err = req.WriteBlock(buf, 1)
 	if err != nil {
 		return ret, err
 	}
 
-	err = buf.WriteInt32(b, 2)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(*c, 3)
+	err = (*rsp).WriteBlock(buf, 2)
 	if err != nil {
 		return ret, err
 	}
@@ -390,14 +364,13 @@ func (obj *Company) SubWithContext(tarsCtx context.Context, a int32, b int32, c 
 		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
 		if traceParamFlag == trace.EnpNormal {
 			value := map[string]interface{}{}
-			value["a"] = a
-			value["b"] = b
+			value["req"] = req
 			p, _ := json.Marshal(value)
 			traceParam = string(p)
 		} else if traceParamFlag == trace.EnpOverMaxLen {
 			traceParam = "{\"trace_param_over_max_len\":true}"
 		}
-		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "Sub", 0, traceParam, "")
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListCompanies", 0, traceParam, "")
 	}
 
 	var statusMap map[string]string
@@ -410,7 +383,7 @@ func (obj *Company) SubWithContext(tarsCtx context.Context, a int32, b int32, c 
 	}
 
 	tarsResp := new(requestf.ResponsePacket)
-	err = obj.servant.TarsInvoke(tarsCtx, 0, "Sub", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListCompanies", buf.ToBytes(), statusMap, contextMap, tarsResp)
 	if err != nil {
 		return ret, err
 	}
@@ -421,7 +394,7 @@ func (obj *Company) SubWithContext(tarsCtx context.Context, a int32, b int32, c 
 		return ret, err
 	}
 
-	err = readBuf.ReadInt32(&(*c), 3, true)
+	err = (*rsp).ReadBlock(readBuf, 2, true)
 	if err != nil {
 		return ret, err
 	}
@@ -432,13 +405,13 @@ func (obj *Company) SubWithContext(tarsCtx context.Context, a int32, b int32, c 
 		if traceParamFlag == trace.EnpNormal {
 			value := map[string]interface{}{}
 			value[""] = ret
-			value["c"] = *c
+			value["rsp"] = *rsp
 			p, _ := json.Marshal(value)
 			traceParam = string(p)
 		} else if traceParamFlag == trace.EnpOverMaxLen {
 			traceParam = "{\"trace_param_over_max_len\":true}"
 		}
-		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "Sub", int(tarsResp.IRet), traceParam, "")
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListCompanies", int(tarsResp.IRet), traceParam, "")
 	}
 
 	if len(opts) == 1 {
@@ -468,25 +441,20 @@ func (obj *Company) SubWithContext(tarsCtx context.Context, a int32, b int32, c 
 	return ret, nil
 }
 
-// SubOneWayWithContext is the proxy function for the method defined in the tars file, with the context
-func (obj *Company) SubOneWayWithContext(tarsCtx context.Context, a int32, b int32, c *int32, opts ...map[string]string) (ret int32, err error) {
+// ListCompaniesOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListCompaniesOneWayWithContext(tarsCtx context.Context, req *CompanyListRequest, rsp *CompanyList, opts ...map[string]string) (ret int32, err error) {
 	var (
 		length int32
 		have   bool
 		ty     byte
 	)
 	buf := codec.NewBuffer()
-	err = buf.WriteInt32(a, 1)
+	err = req.WriteBlock(buf, 1)
 	if err != nil {
 		return ret, err
 	}
 
-	err = buf.WriteInt32(b, 2)
-	if err != nil {
-		return ret, err
-	}
-
-	err = buf.WriteInt32(*c, 3)
+	err = (*rsp).WriteBlock(buf, 2)
 	if err != nil {
 		return ret, err
 	}
@@ -501,7 +469,8009 @@ func (obj *Company) SubOneWayWithContext(tarsCtx context.Context, a int32, b int
 	}
 
 	tarsResp := new(requestf.ResponsePacket)
-	err = obj.servant.TarsInvoke(tarsCtx, 1, "Sub", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "ListCompanies", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetCompany is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetCompany(req *GetCompanyRequest, rsp *CompanyInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetCompany", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetCompanyWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetCompanyWithContext(tarsCtx context.Context, req *GetCompanyRequest, rsp *CompanyInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetCompany", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetCompany", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetCompany", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetCompanyOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetCompanyOneWayWithContext(tarsCtx context.Context, req *GetCompanyRequest, rsp *CompanyInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "GetCompany", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateCompany is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateCompany(req *CompanyInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "UpdateCompany", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateCompanyWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateCompanyWithContext(tarsCtx context.Context, req *CompanyInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "UpdateCompany", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "UpdateCompany", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "UpdateCompany", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateCompanyOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateCompanyOneWayWithContext(tarsCtx context.Context, req *CompanyInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "UpdateCompany", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateTeam is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateTeam(req *CreateTeamRequest, rsp *TeamInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateTeam", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateTeamWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateTeamWithContext(tarsCtx context.Context, req *CreateTeamRequest, rsp *TeamInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateTeam", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateTeam", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateTeam", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateTeamOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateTeamOneWayWithContext(tarsCtx context.Context, req *CreateTeamRequest, rsp *TeamInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "CreateTeam", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListTeams is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListTeams(req *TeamListRequest, rsp *TeamList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListTeams", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListTeamsWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListTeamsWithContext(tarsCtx context.Context, req *TeamListRequest, rsp *TeamList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListTeams", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListTeams", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListTeams", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListTeamsOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListTeamsOneWayWithContext(tarsCtx context.Context, req *TeamListRequest, rsp *TeamList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "ListTeams", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetTeam is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetTeam(req *GetTeamRequest, rsp *TeamInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetTeam", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetTeamWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetTeamWithContext(tarsCtx context.Context, req *GetTeamRequest, rsp *TeamInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetTeam", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetTeam", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetTeam", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetTeamOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetTeamOneWayWithContext(tarsCtx context.Context, req *GetTeamRequest, rsp *TeamInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "GetTeam", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateTeam is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateTeam(req *TeamInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "UpdateTeam", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateTeamWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateTeamWithContext(tarsCtx context.Context, req *TeamInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "UpdateTeam", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "UpdateTeam", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "UpdateTeam", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateTeamOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateTeamOneWayWithContext(tarsCtx context.Context, req *TeamInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "UpdateTeam", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetWorkerTeamInfo is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetWorkerTeamInfo(req *Worker, rsp *Worker, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetWorkerTeamInfo", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetWorkerTeamInfoWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetWorkerTeamInfoWithContext(tarsCtx context.Context, req *Worker, rsp *Worker, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetWorkerTeamInfo", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetWorkerTeamInfo", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetWorkerTeamInfo", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetWorkerTeamInfoOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetWorkerTeamInfoOneWayWithContext(tarsCtx context.Context, req *Worker, rsp *Worker, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "GetWorkerTeamInfo", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateJob is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateJob(req *CreateJobRequest, rsp *JobInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateJob", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateJobWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateJobWithContext(tarsCtx context.Context, req *CreateJobRequest, rsp *JobInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateJob", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateJob", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateJob", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateJobOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateJobOneWayWithContext(tarsCtx context.Context, req *CreateJobRequest, rsp *JobInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "CreateJob", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListJobs is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListJobs(req *JobListRequest, rsp *JobList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListJobs", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListJobsWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListJobsWithContext(tarsCtx context.Context, req *JobListRequest, rsp *JobList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListJobs", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListJobs", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListJobs", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListJobsOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListJobsOneWayWithContext(tarsCtx context.Context, req *JobListRequest, rsp *JobList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "ListJobs", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetJob is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetJob(req *GetJobRequest, rsp *JobInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetJob", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetJobWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetJobWithContext(tarsCtx context.Context, req *GetJobRequest, rsp *JobInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetJob", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetJob", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetJob", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetJobOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetJobOneWayWithContext(tarsCtx context.Context, req *GetJobRequest, rsp *JobInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "GetJob", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateJob is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateJob(req *JobInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "UpdateJob", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateJobWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateJobWithContext(tarsCtx context.Context, req *JobInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "UpdateJob", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "UpdateJob", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "UpdateJob", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateJobOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateJobOneWayWithContext(tarsCtx context.Context, req *JobInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "UpdateJob", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateShift is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateShift(req *CreateShiftRequest, rsp *ShiftInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateShiftWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateShiftWithContext(tarsCtx context.Context, req *CreateShiftRequest, rsp *ShiftInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateShift", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateShift", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateShiftOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateShiftOneWayWithContext(tarsCtx context.Context, req *CreateShiftRequest, rsp *ShiftInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "CreateShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListShifts is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListShifts(req *ShiftListRequest, rsp *ShiftList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListShiftsWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListShiftsWithContext(tarsCtx context.Context, req *ShiftListRequest, rsp *ShiftList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListShifts", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListShifts", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListShiftsOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListShiftsOneWayWithContext(tarsCtx context.Context, req *ShiftListRequest, rsp *ShiftList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "ListShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListWorkerShifts is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListWorkerShifts(req *WorkerShiftListRequest, rsp *ShiftList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListWorkerShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListWorkerShiftsWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListWorkerShiftsWithContext(tarsCtx context.Context, req *WorkerShiftListRequest, rsp *ShiftList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListWorkerShifts", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListWorkerShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListWorkerShifts", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListWorkerShiftsOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListWorkerShiftsOneWayWithContext(tarsCtx context.Context, req *WorkerShiftListRequest, rsp *ShiftList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "ListWorkerShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// BulkPublishShifts is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) BulkPublishShifts(req *BulkPublishShiftsRequest, rsp *ShiftList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "BulkPublishShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// BulkPublishShiftsWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) BulkPublishShiftsWithContext(tarsCtx context.Context, req *BulkPublishShiftsRequest, rsp *ShiftList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "BulkPublishShifts", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "BulkPublishShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "BulkPublishShifts", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// BulkPublishShiftsOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) BulkPublishShiftsOneWayWithContext(tarsCtx context.Context, req *BulkPublishShiftsRequest, rsp *ShiftList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "BulkPublishShifts", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetShift is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetShift(req *GetShiftRequest, rsp *ShiftInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetShiftWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetShiftWithContext(tarsCtx context.Context, req *GetShiftRequest, rsp *ShiftInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetShift", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetShift", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetShiftOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetShiftOneWayWithContext(tarsCtx context.Context, req *GetShiftRequest, rsp *ShiftInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "GetShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// DeleteShift is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) DeleteShift(req *GetShiftRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "DeleteShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// DeleteShiftWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) DeleteShiftWithContext(tarsCtx context.Context, req *GetShiftRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "DeleteShift", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "DeleteShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "DeleteShift", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// DeleteShiftOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) DeleteShiftOneWayWithContext(tarsCtx context.Context, req *GetShiftRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "DeleteShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateShift is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateShift(req *ShiftInfo, rsp *ShiftInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "UpdateShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateShiftWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateShiftWithContext(tarsCtx context.Context, req *ShiftInfo, rsp *ShiftInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "UpdateShift", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "UpdateShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "UpdateShift", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateShiftOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateShiftOneWayWithContext(tarsCtx context.Context, req *ShiftInfo, rsp *ShiftInfo, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "UpdateShift", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateDirectory is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateDirectory(req *NewDirectoryEntry, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateDirectory", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateDirectoryWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateDirectoryWithContext(tarsCtx context.Context, req *NewDirectoryEntry, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateDirectory", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateDirectory", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateDirectory", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateDirectoryOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateDirectoryOneWayWithContext(tarsCtx context.Context, req *NewDirectoryEntry, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "CreateDirectory", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// Directory is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) Directory(req *DirectoryListRequest, rsp *DirectoryList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "Directory", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// DirectoryWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) DirectoryWithContext(tarsCtx context.Context, req *DirectoryListRequest, rsp *DirectoryList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "Directory", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "Directory", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "Directory", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// DirectoryOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) DirectoryOneWayWithContext(tarsCtx context.Context, req *DirectoryListRequest, rsp *DirectoryList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "Directory", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetAssociations is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetAssociations(req *DirectoryListRequest, rsp *AssociationList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetAssociations", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetAssociationsWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetAssociationsWithContext(tarsCtx context.Context, req *DirectoryListRequest, rsp *AssociationList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetAssociations", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetAssociations", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetAssociations", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetAssociationsOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetAssociationsOneWayWithContext(tarsCtx context.Context, req *DirectoryListRequest, rsp *AssociationList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "GetAssociations", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetDirectoryEntry is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetDirectoryEntry(req *DirectoryEntryRequest, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetDirectoryEntry", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetDirectoryEntryWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetDirectoryEntryWithContext(tarsCtx context.Context, req *DirectoryEntryRequest, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetDirectoryEntry", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetDirectoryEntry", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetDirectoryEntry", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetDirectoryEntryOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetDirectoryEntryOneWayWithContext(tarsCtx context.Context, req *DirectoryEntryRequest, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "GetDirectoryEntry", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateDirectoryEntry is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateDirectoryEntry(req *DirectoryEntry, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "UpdateDirectoryEntry", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateDirectoryEntryWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateDirectoryEntryWithContext(tarsCtx context.Context, req *DirectoryEntry, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "UpdateDirectoryEntry", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "UpdateDirectoryEntry", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "UpdateDirectoryEntry", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// UpdateDirectoryEntryOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) UpdateDirectoryEntryOneWayWithContext(tarsCtx context.Context, req *DirectoryEntry, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "UpdateDirectoryEntry", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListAdmins is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListAdmins(req *AdminListRequest, rsp *Admins, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListAdmins", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListAdminsWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListAdminsWithContext(tarsCtx context.Context, req *AdminListRequest, rsp *Admins, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListAdmins", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListAdmins", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListAdmins", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListAdminsOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListAdminsOneWayWithContext(tarsCtx context.Context, req *AdminListRequest, rsp *Admins, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "ListAdmins", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateAdmin is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateAdmin(req *DirectoryEntryRequest, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateAdmin", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateAdminWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateAdminWithContext(tarsCtx context.Context, req *DirectoryEntryRequest, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateAdmin", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateAdmin", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateAdmin", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateAdminOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateAdminOneWayWithContext(tarsCtx context.Context, req *DirectoryEntryRequest, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "CreateAdmin", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetAdmin is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetAdmin(req *DirectoryEntryRequest, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetAdmin", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetAdminWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetAdminWithContext(tarsCtx context.Context, req *DirectoryEntryRequest, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetAdmin", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetAdmin", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetAdmin", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetAdminOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetAdminOneWayWithContext(tarsCtx context.Context, req *DirectoryEntryRequest, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "GetAdmin", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// DeleteAdmin is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) DeleteAdmin(req *DirectoryEntryRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "DeleteAdmin", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// DeleteAdminWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) DeleteAdminWithContext(tarsCtx context.Context, req *DirectoryEntryRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "DeleteAdmin", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "DeleteAdmin", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "DeleteAdmin", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// DeleteAdminOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) DeleteAdminOneWayWithContext(tarsCtx context.Context, req *DirectoryEntryRequest, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "DeleteAdmin", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListWorkers is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListWorkers(req *WorkerListRequest, rsp *Workers, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListWorkers", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListWorkersWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListWorkersWithContext(tarsCtx context.Context, req *WorkerListRequest, rsp *Workers, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListWorkers", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListWorkers", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListWorkers", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListWorkersOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListWorkersOneWayWithContext(tarsCtx context.Context, req *WorkerListRequest, rsp *Workers, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "ListWorkers", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetWorker is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetWorker(req *Worker, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetWorker", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetWorkerWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetWorkerWithContext(tarsCtx context.Context, req *Worker, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetWorker", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetWorker", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetWorker", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetWorkerOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetWorkerOneWayWithContext(tarsCtx context.Context, req *Worker, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "GetWorker", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// DeleteWorker is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) DeleteWorker(req *Worker, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "DeleteWorker", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// DeleteWorkerWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) DeleteWorkerWithContext(tarsCtx context.Context, req *Worker, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "DeleteWorker", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "DeleteWorker", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "DeleteWorker", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// DeleteWorkerOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) DeleteWorkerOneWayWithContext(tarsCtx context.Context, req *Worker, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "DeleteWorker", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateWorker is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateWorker(req *Worker, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateWorker", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateWorkerWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateWorkerWithContext(tarsCtx context.Context, req *Worker, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateWorker", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "CreateWorker", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "CreateWorker", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// CreateWorkerOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) CreateWorkerOneWayWithContext(tarsCtx context.Context, req *Worker, rsp *DirectoryEntry, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "CreateWorker", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListTimeZones is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListTimeZones(rsp *TimeZoneList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = (*rsp).WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListTimeZones", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 1, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListTimeZonesWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListTimeZonesWithContext(tarsCtx context.Context, rsp *TimeZoneList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = (*rsp).WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListTimeZones", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "ListTimeZones", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 1, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "ListTimeZones", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// ListTimeZonesOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) ListTimeZonesOneWayWithContext(tarsCtx context.Context, rsp *TimeZoneList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = (*rsp).WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "ListTimeZones", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GrowthGraph is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GrowthGraph(rsp *GrowthGraphResponse, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = (*rsp).WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GrowthGraph", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 1, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GrowthGraphWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GrowthGraphWithContext(tarsCtx context.Context, rsp *GrowthGraphResponse, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = (*rsp).WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GrowthGraph", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GrowthGraph", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 1, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GrowthGraph", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GrowthGraphOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GrowthGraphOneWayWithContext(tarsCtx context.Context, rsp *GrowthGraphResponse, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = (*rsp).WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "GrowthGraph", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetWorkerOf is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetWorkerOf(req *WorkerOfRequest, rsp *WorkerOfList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetWorkerOf", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetWorkerOfWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetWorkerOfWithContext(tarsCtx context.Context, req *WorkerOfRequest, rsp *WorkerOfList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetWorkerOf", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetWorkerOf", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetWorkerOf", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetWorkerOfOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetWorkerOfOneWayWithContext(tarsCtx context.Context, req *WorkerOfRequest, rsp *WorkerOfList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "GetWorkerOf", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetAdminOf is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetAdminOf(req *AdminOfRequest, rsp *AdminOfList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+	tarsResp := new(requestf.ResponsePacket)
+	tarsCtx := context.Background()
+
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetAdminOf", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetAdminOfWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetAdminOfWithContext(tarsCtx context.Context, req *AdminOfRequest, rsp *AdminOfList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	traceData, ok := current.GetTraceData(tarsCtx)
+	if ok && traceData.TraceCall {
+		traceData.NewSpan()
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCS, uint(buf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value["req"] = req
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCS), trace.TraceAnnotationCS, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetAdminOf", 0, traceParam, "")
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 0, "GetAdminOf", buf.ToBytes(), statusMap, contextMap, tarsResp)
+	if err != nil {
+		return ret, err
+	}
+
+	readBuf := codec.NewReader(tools.Int8ToByte(tarsResp.SBuffer))
+	err = readBuf.ReadInt32(&ret, 0, true)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).ReadBlock(readBuf, 2, true)
+	if err != nil {
+		return ret, err
+	}
+
+	if ok && traceData.TraceCall {
+		var traceParam string
+		traceParamFlag := traceData.NeedTraceParam(trace.EstCR, uint(readBuf.Len()))
+		if traceParamFlag == trace.EnpNormal {
+			value := map[string]interface{}{}
+			value[""] = ret
+			value["rsp"] = *rsp
+			p, _ := json.Marshal(value)
+			traceParam = string(p)
+		} else if traceParamFlag == trace.EnpOverMaxLen {
+			traceParam = "{\"trace_param_over_max_len\":true}"
+		}
+		tars.Trace(traceData.GetTraceKey(trace.EstCR), trace.TraceAnnotationCR, tars.GetClientConfig().ModuleName, obj.servant.Name(), "GetAdminOf", int(tarsResp.IRet), traceParam, "")
+	}
+
+	if len(opts) == 1 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+	} else if len(opts) == 2 {
+		for k := range contextMap {
+			delete(contextMap, k)
+		}
+		for k, v := range tarsResp.Context {
+			contextMap[k] = v
+		}
+		for k := range statusMap {
+			delete(statusMap, k)
+		}
+		for k, v := range tarsResp.Status {
+			statusMap[k] = v
+		}
+	}
+	_ = length
+	_ = have
+	_ = ty
+	return ret, nil
+}
+
+// GetAdminOfOneWayWithContext is the proxy function for the method defined in the tars file, with the context
+func (obj *Company) GetAdminOfOneWayWithContext(tarsCtx context.Context, req *AdminOfRequest, rsp *AdminOfList, opts ...map[string]string) (ret int32, err error) {
+	var (
+		length int32
+		have   bool
+		ty     byte
+	)
+	buf := codec.NewBuffer()
+	err = req.WriteBlock(buf, 1)
+	if err != nil {
+		return ret, err
+	}
+
+	err = (*rsp).WriteBlock(buf, 2)
+	if err != nil {
+		return ret, err
+	}
+
+	var statusMap map[string]string
+	var contextMap map[string]string
+	if len(opts) == 1 {
+		contextMap = opts[0]
+	} else if len(opts) == 2 {
+		contextMap = opts[0]
+		statusMap = opts[1]
+	}
+
+	tarsResp := new(requestf.ResponsePacket)
+	err = obj.servant.TarsInvoke(tarsCtx, 1, "GetAdminOf", buf.ToBytes(), statusMap, contextMap, tarsResp)
 	if err != nil {
 		return ret, err
 	}
@@ -559,12 +8529,82 @@ func (obj *Company) AddServantWithContext(imp CompanyServantWithContext, servant
 }
 
 type CompanyServant interface {
-	Add(a int32, b int32, c *int32) (ret int32, err error)
-	Sub(a int32, b int32, c *int32) (ret int32, err error)
+	CreateCompany(req *CreateCompanyRequest, rsp *CompanyInfo) (ret int32, err error)
+	ListCompanies(req *CompanyListRequest, rsp *CompanyList) (ret int32, err error)
+	GetCompany(req *GetCompanyRequest, rsp *CompanyInfo) (ret int32, err error)
+	UpdateCompany(req *CompanyInfo) (ret int32, err error)
+	CreateTeam(req *CreateTeamRequest, rsp *TeamInfo) (ret int32, err error)
+	ListTeams(req *TeamListRequest, rsp *TeamList) (ret int32, err error)
+	GetTeam(req *GetTeamRequest, rsp *TeamInfo) (ret int32, err error)
+	UpdateTeam(req *TeamInfo) (ret int32, err error)
+	GetWorkerTeamInfo(req *Worker, rsp *Worker) (ret int32, err error)
+	CreateJob(req *CreateJobRequest, rsp *JobInfo) (ret int32, err error)
+	ListJobs(req *JobListRequest, rsp *JobList) (ret int32, err error)
+	GetJob(req *GetJobRequest, rsp *JobInfo) (ret int32, err error)
+	UpdateJob(req *JobInfo) (ret int32, err error)
+	CreateShift(req *CreateShiftRequest, rsp *ShiftInfo) (ret int32, err error)
+	ListShifts(req *ShiftListRequest, rsp *ShiftList) (ret int32, err error)
+	ListWorkerShifts(req *WorkerShiftListRequest, rsp *ShiftList) (ret int32, err error)
+	BulkPublishShifts(req *BulkPublishShiftsRequest, rsp *ShiftList) (ret int32, err error)
+	GetShift(req *GetShiftRequest, rsp *ShiftInfo) (ret int32, err error)
+	DeleteShift(req *GetShiftRequest) (ret int32, err error)
+	UpdateShift(req *ShiftInfo, rsp *ShiftInfo) (ret int32, err error)
+	CreateDirectory(req *NewDirectoryEntry, rsp *DirectoryEntry) (ret int32, err error)
+	Directory(req *DirectoryListRequest, rsp *DirectoryList) (ret int32, err error)
+	GetAssociations(req *DirectoryListRequest, rsp *AssociationList) (ret int32, err error)
+	GetDirectoryEntry(req *DirectoryEntryRequest, rsp *DirectoryEntry) (ret int32, err error)
+	UpdateDirectoryEntry(req *DirectoryEntry, rsp *DirectoryEntry) (ret int32, err error)
+	ListAdmins(req *AdminListRequest, rsp *Admins) (ret int32, err error)
+	CreateAdmin(req *DirectoryEntryRequest, rsp *DirectoryEntry) (ret int32, err error)
+	GetAdmin(req *DirectoryEntryRequest, rsp *DirectoryEntry) (ret int32, err error)
+	DeleteAdmin(req *DirectoryEntryRequest) (ret int32, err error)
+	ListWorkers(req *WorkerListRequest, rsp *Workers) (ret int32, err error)
+	GetWorker(req *Worker, rsp *DirectoryEntry) (ret int32, err error)
+	DeleteWorker(req *Worker) (ret int32, err error)
+	CreateWorker(req *Worker, rsp *DirectoryEntry) (ret int32, err error)
+	ListTimeZones(rsp *TimeZoneList) (ret int32, err error)
+	GrowthGraph(rsp *GrowthGraphResponse) (ret int32, err error)
+	GetWorkerOf(req *WorkerOfRequest, rsp *WorkerOfList) (ret int32, err error)
+	GetAdminOf(req *AdminOfRequest, rsp *AdminOfList) (ret int32, err error)
 }
 type CompanyServantWithContext interface {
-	Add(tarsCtx context.Context, a int32, b int32, c *int32) (ret int32, err error)
-	Sub(tarsCtx context.Context, a int32, b int32, c *int32) (ret int32, err error)
+	CreateCompany(tarsCtx context.Context, req *CreateCompanyRequest, rsp *CompanyInfo) (ret int32, err error)
+	ListCompanies(tarsCtx context.Context, req *CompanyListRequest, rsp *CompanyList) (ret int32, err error)
+	GetCompany(tarsCtx context.Context, req *GetCompanyRequest, rsp *CompanyInfo) (ret int32, err error)
+	UpdateCompany(tarsCtx context.Context, req *CompanyInfo) (ret int32, err error)
+	CreateTeam(tarsCtx context.Context, req *CreateTeamRequest, rsp *TeamInfo) (ret int32, err error)
+	ListTeams(tarsCtx context.Context, req *TeamListRequest, rsp *TeamList) (ret int32, err error)
+	GetTeam(tarsCtx context.Context, req *GetTeamRequest, rsp *TeamInfo) (ret int32, err error)
+	UpdateTeam(tarsCtx context.Context, req *TeamInfo) (ret int32, err error)
+	GetWorkerTeamInfo(tarsCtx context.Context, req *Worker, rsp *Worker) (ret int32, err error)
+	CreateJob(tarsCtx context.Context, req *CreateJobRequest, rsp *JobInfo) (ret int32, err error)
+	ListJobs(tarsCtx context.Context, req *JobListRequest, rsp *JobList) (ret int32, err error)
+	GetJob(tarsCtx context.Context, req *GetJobRequest, rsp *JobInfo) (ret int32, err error)
+	UpdateJob(tarsCtx context.Context, req *JobInfo) (ret int32, err error)
+	CreateShift(tarsCtx context.Context, req *CreateShiftRequest, rsp *ShiftInfo) (ret int32, err error)
+	ListShifts(tarsCtx context.Context, req *ShiftListRequest, rsp *ShiftList) (ret int32, err error)
+	ListWorkerShifts(tarsCtx context.Context, req *WorkerShiftListRequest, rsp *ShiftList) (ret int32, err error)
+	BulkPublishShifts(tarsCtx context.Context, req *BulkPublishShiftsRequest, rsp *ShiftList) (ret int32, err error)
+	GetShift(tarsCtx context.Context, req *GetShiftRequest, rsp *ShiftInfo) (ret int32, err error)
+	DeleteShift(tarsCtx context.Context, req *GetShiftRequest) (ret int32, err error)
+	UpdateShift(tarsCtx context.Context, req *ShiftInfo, rsp *ShiftInfo) (ret int32, err error)
+	CreateDirectory(tarsCtx context.Context, req *NewDirectoryEntry, rsp *DirectoryEntry) (ret int32, err error)
+	Directory(tarsCtx context.Context, req *DirectoryListRequest, rsp *DirectoryList) (ret int32, err error)
+	GetAssociations(tarsCtx context.Context, req *DirectoryListRequest, rsp *AssociationList) (ret int32, err error)
+	GetDirectoryEntry(tarsCtx context.Context, req *DirectoryEntryRequest, rsp *DirectoryEntry) (ret int32, err error)
+	UpdateDirectoryEntry(tarsCtx context.Context, req *DirectoryEntry, rsp *DirectoryEntry) (ret int32, err error)
+	ListAdmins(tarsCtx context.Context, req *AdminListRequest, rsp *Admins) (ret int32, err error)
+	CreateAdmin(tarsCtx context.Context, req *DirectoryEntryRequest, rsp *DirectoryEntry) (ret int32, err error)
+	GetAdmin(tarsCtx context.Context, req *DirectoryEntryRequest, rsp *DirectoryEntry) (ret int32, err error)
+	DeleteAdmin(tarsCtx context.Context, req *DirectoryEntryRequest) (ret int32, err error)
+	ListWorkers(tarsCtx context.Context, req *WorkerListRequest, rsp *Workers) (ret int32, err error)
+	GetWorker(tarsCtx context.Context, req *Worker, rsp *DirectoryEntry) (ret int32, err error)
+	DeleteWorker(tarsCtx context.Context, req *Worker) (ret int32, err error)
+	CreateWorker(tarsCtx context.Context, req *Worker, rsp *DirectoryEntry) (ret int32, err error)
+	ListTimeZones(tarsCtx context.Context, rsp *TimeZoneList) (ret int32, err error)
+	GrowthGraph(tarsCtx context.Context, rsp *GrowthGraphResponse) (ret int32, err error)
+	GetWorkerOf(tarsCtx context.Context, req *WorkerOfRequest, rsp *WorkerOfList) (ret int32, err error)
+	GetAdminOf(tarsCtx context.Context, req *AdminOfRequest, rsp *AdminOfList) (ret int32, err error)
 }
 
 // Dispatch is used to call the server side implement for the method defined in the tars file. withContext shows using context or not.
@@ -577,19 +8617,13 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 	readBuf := codec.NewReader(tools.Int8ToByte(tarsReq.SBuffer))
 	buf := codec.NewBuffer()
 	switch tarsReq.SFuncName {
-	case "Add":
-		var a int32
-		var b int32
-		var c int32
+	case "CreateCompany":
+		var req CreateCompanyRequest
+		var rsp CompanyInfo
 
 		if tarsReq.IVersion == basef.TARSVERSION {
 
-			err = readBuf.ReadInt32(&a, 1, true)
-			if err != nil {
-				return err
-			}
-
-			err = readBuf.ReadInt32(&b, 2, true)
+			err = req.ReadBlock(readBuf, 1, true)
 			if err != nil {
 				return err
 			}
@@ -600,16 +8634,9 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 
 			var tupBuffer []byte
 
-			reqTup.GetBuffer("a", &tupBuffer)
+			reqTup.GetBuffer("req", &tupBuffer)
 			readBuf.Reset(tupBuffer)
-			err = readBuf.ReadInt32(&a, 0, true)
-			if err != nil {
-				return err
-			}
-
-			reqTup.GetBuffer("b", &tupBuffer)
-			readBuf.Reset(tupBuffer)
-			err = readBuf.ReadInt32(&b, 0, true)
+			err = req.ReadBlock(readBuf, 0, true)
 			if err != nil {
 				return err
 			}
@@ -623,14 +8650,9 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
 			}
 			{
-				jsonStr, _ := json.Marshal(jsonData["a"])
-				if err = json.Unmarshal(jsonStr, &a); err != nil {
-					return err
-				}
-			}
-			{
-				jsonStr, _ := json.Marshal(jsonData["b"])
-				if err = json.Unmarshal(jsonStr, &b); err != nil {
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
 					return err
 				}
 			}
@@ -646,23 +8668,22 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
 			if traceParamFlag == trace.EnpNormal {
 				value := map[string]interface{}{}
-				value["a"] = a
-				value["b"] = b
+				value["req"] = req
 				p, _ := json.Marshal(value)
 				traceParam = string(p)
 			} else if traceParamFlag == trace.EnpOverMaxLen {
 				traceParam = "{\"trace_param_over_max_len\":true}"
 			}
-			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "Add", 0, traceParam, "")
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateCompany", 0, traceParam, "")
 		}
 
 		var funRet int32
 		if !withContext {
 			imp := val.(CompanyServant)
-			funRet, err = imp.Add(a, b, &c)
+			funRet, err = imp.CreateCompany(&req, &rsp)
 		} else {
 			imp := val.(CompanyServantWithContext)
-			funRet, err = imp.Add(tarsCtx, a, b, &c)
+			funRet, err = imp.CreateCompany(tarsCtx, &req, &rsp)
 		}
 
 		if err != nil {
@@ -677,7 +8698,7 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 				return err
 			}
 
-			err = buf.WriteInt32(c, 3)
+			err = rsp.WriteBlock(buf, 2)
 			if err != nil {
 				return err
 			}
@@ -694,12 +8715,12 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 			rspTup.PutBuffer("tars_ret", buf.ToBytes())
 
 			buf.Reset()
-			err = buf.WriteInt32(c, 0)
+			err = rsp.WriteBlock(buf, 0)
 			if err != nil {
 				return err
 			}
 
-			rspTup.PutBuffer("c", buf.ToBytes())
+			rspTup.PutBuffer("rsp", buf.ToBytes())
 
 			buf.Reset()
 			err = rspTup.Encode(buf)
@@ -709,7 +8730,7 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 		} else if tarsReq.IVersion == basef.JSONVERSION {
 			rspJson := map[string]interface{}{}
 			rspJson["tars_ret"] = funRet
-			rspJson["c"] = c
+			rspJson["rsp"] = rsp
 
 			var rspByte []byte
 			if rspByte, err = json.Marshal(rspJson); err != nil {
@@ -729,28 +8750,22 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 			if traceParamFlag == trace.EnpNormal {
 				value := map[string]interface{}{}
 				value[""] = funRet
-				value["c"] = c
+				value["rsp"] = rsp
 				p, _ := json.Marshal(value)
 				traceParam = string(p)
 			} else if traceParamFlag == trace.EnpOverMaxLen {
 				traceParam = "{\"trace_param_over_max_len\":true}"
 			}
-			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "Add", 0, traceParam, "")
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateCompany", 0, traceParam, "")
 		}
 
-	case "Sub":
-		var a int32
-		var b int32
-		var c int32
+	case "ListCompanies":
+		var req CompanyListRequest
+		var rsp CompanyList
 
 		if tarsReq.IVersion == basef.TARSVERSION {
 
-			err = readBuf.ReadInt32(&a, 1, true)
-			if err != nil {
-				return err
-			}
-
-			err = readBuf.ReadInt32(&b, 2, true)
+			err = req.ReadBlock(readBuf, 1, true)
 			if err != nil {
 				return err
 			}
@@ -761,16 +8776,9 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 
 			var tupBuffer []byte
 
-			reqTup.GetBuffer("a", &tupBuffer)
+			reqTup.GetBuffer("req", &tupBuffer)
 			readBuf.Reset(tupBuffer)
-			err = readBuf.ReadInt32(&a, 0, true)
-			if err != nil {
-				return err
-			}
-
-			reqTup.GetBuffer("b", &tupBuffer)
-			readBuf.Reset(tupBuffer)
-			err = readBuf.ReadInt32(&b, 0, true)
+			err = req.ReadBlock(readBuf, 0, true)
 			if err != nil {
 				return err
 			}
@@ -784,14 +8792,9 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
 			}
 			{
-				jsonStr, _ := json.Marshal(jsonData["a"])
-				if err = json.Unmarshal(jsonStr, &a); err != nil {
-					return err
-				}
-			}
-			{
-				jsonStr, _ := json.Marshal(jsonData["b"])
-				if err = json.Unmarshal(jsonStr, &b); err != nil {
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
 					return err
 				}
 			}
@@ -807,23 +8810,22 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
 			if traceParamFlag == trace.EnpNormal {
 				value := map[string]interface{}{}
-				value["a"] = a
-				value["b"] = b
+				value["req"] = req
 				p, _ := json.Marshal(value)
 				traceParam = string(p)
 			} else if traceParamFlag == trace.EnpOverMaxLen {
 				traceParam = "{\"trace_param_over_max_len\":true}"
 			}
-			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "Sub", 0, traceParam, "")
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListCompanies", 0, traceParam, "")
 		}
 
 		var funRet int32
 		if !withContext {
 			imp := val.(CompanyServant)
-			funRet, err = imp.Sub(a, b, &c)
+			funRet, err = imp.ListCompanies(&req, &rsp)
 		} else {
 			imp := val.(CompanyServantWithContext)
-			funRet, err = imp.Sub(tarsCtx, a, b, &c)
+			funRet, err = imp.ListCompanies(tarsCtx, &req, &rsp)
 		}
 
 		if err != nil {
@@ -838,7 +8840,7 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 				return err
 			}
 
-			err = buf.WriteInt32(c, 3)
+			err = rsp.WriteBlock(buf, 2)
 			if err != nil {
 				return err
 			}
@@ -855,12 +8857,12 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 			rspTup.PutBuffer("tars_ret", buf.ToBytes())
 
 			buf.Reset()
-			err = buf.WriteInt32(c, 0)
+			err = rsp.WriteBlock(buf, 0)
 			if err != nil {
 				return err
 			}
 
-			rspTup.PutBuffer("c", buf.ToBytes())
+			rspTup.PutBuffer("rsp", buf.ToBytes())
 
 			buf.Reset()
 			err = rspTup.Encode(buf)
@@ -870,7 +8872,7 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 		} else if tarsReq.IVersion == basef.JSONVERSION {
 			rspJson := map[string]interface{}{}
 			rspJson["tars_ret"] = funRet
-			rspJson["c"] = c
+			rspJson["rsp"] = rsp
 
 			var rspByte []byte
 			if rspByte, err = json.Marshal(rspJson); err != nil {
@@ -890,13 +8892,4801 @@ func (obj *Company) Dispatch(tarsCtx context.Context, val interface{}, tarsReq *
 			if traceParamFlag == trace.EnpNormal {
 				value := map[string]interface{}{}
 				value[""] = funRet
-				value["c"] = c
+				value["rsp"] = rsp
 				p, _ := json.Marshal(value)
 				traceParam = string(p)
 			} else if traceParamFlag == trace.EnpOverMaxLen {
 				traceParam = "{\"trace_param_over_max_len\":true}"
 			}
-			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "Sub", 0, traceParam, "")
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListCompanies", 0, traceParam, "")
+		}
+
+	case "GetCompany":
+		var req GetCompanyRequest
+		var rsp CompanyInfo
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetCompany", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.GetCompany(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.GetCompany(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetCompany", 0, traceParam, "")
+		}
+
+	case "UpdateCompany":
+		var req CompanyInfo
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "UpdateCompany", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.UpdateCompany(&req)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.UpdateCompany(tarsCtx, &req)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "UpdateCompany", 0, traceParam, "")
+		}
+
+	case "CreateTeam":
+		var req CreateTeamRequest
+		var rsp TeamInfo
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateTeam", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.CreateTeam(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.CreateTeam(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateTeam", 0, traceParam, "")
+		}
+
+	case "ListTeams":
+		var req TeamListRequest
+		var rsp TeamList
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListTeams", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.ListTeams(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.ListTeams(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListTeams", 0, traceParam, "")
+		}
+
+	case "GetTeam":
+		var req GetTeamRequest
+		var rsp TeamInfo
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetTeam", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.GetTeam(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.GetTeam(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetTeam", 0, traceParam, "")
+		}
+
+	case "UpdateTeam":
+		var req TeamInfo
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "UpdateTeam", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.UpdateTeam(&req)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.UpdateTeam(tarsCtx, &req)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "UpdateTeam", 0, traceParam, "")
+		}
+
+	case "GetWorkerTeamInfo":
+		var req Worker
+		var rsp Worker
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetWorkerTeamInfo", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.GetWorkerTeamInfo(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.GetWorkerTeamInfo(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetWorkerTeamInfo", 0, traceParam, "")
+		}
+
+	case "CreateJob":
+		var req CreateJobRequest
+		var rsp JobInfo
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateJob", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.CreateJob(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.CreateJob(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateJob", 0, traceParam, "")
+		}
+
+	case "ListJobs":
+		var req JobListRequest
+		var rsp JobList
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListJobs", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.ListJobs(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.ListJobs(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListJobs", 0, traceParam, "")
+		}
+
+	case "GetJob":
+		var req GetJobRequest
+		var rsp JobInfo
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetJob", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.GetJob(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.GetJob(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetJob", 0, traceParam, "")
+		}
+
+	case "UpdateJob":
+		var req JobInfo
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "UpdateJob", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.UpdateJob(&req)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.UpdateJob(tarsCtx, &req)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "UpdateJob", 0, traceParam, "")
+		}
+
+	case "CreateShift":
+		var req CreateShiftRequest
+		var rsp ShiftInfo
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateShift", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.CreateShift(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.CreateShift(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateShift", 0, traceParam, "")
+		}
+
+	case "ListShifts":
+		var req ShiftListRequest
+		var rsp ShiftList
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListShifts", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.ListShifts(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.ListShifts(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListShifts", 0, traceParam, "")
+		}
+
+	case "ListWorkerShifts":
+		var req WorkerShiftListRequest
+		var rsp ShiftList
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListWorkerShifts", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.ListWorkerShifts(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.ListWorkerShifts(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListWorkerShifts", 0, traceParam, "")
+		}
+
+	case "BulkPublishShifts":
+		var req BulkPublishShiftsRequest
+		var rsp ShiftList
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "BulkPublishShifts", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.BulkPublishShifts(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.BulkPublishShifts(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "BulkPublishShifts", 0, traceParam, "")
+		}
+
+	case "GetShift":
+		var req GetShiftRequest
+		var rsp ShiftInfo
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetShift", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.GetShift(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.GetShift(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetShift", 0, traceParam, "")
+		}
+
+	case "DeleteShift":
+		var req GetShiftRequest
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "DeleteShift", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.DeleteShift(&req)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.DeleteShift(tarsCtx, &req)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "DeleteShift", 0, traceParam, "")
+		}
+
+	case "UpdateShift":
+		var req ShiftInfo
+		var rsp ShiftInfo
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "UpdateShift", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.UpdateShift(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.UpdateShift(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "UpdateShift", 0, traceParam, "")
+		}
+
+	case "CreateDirectory":
+		var req NewDirectoryEntry
+		var rsp DirectoryEntry
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateDirectory", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.CreateDirectory(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.CreateDirectory(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateDirectory", 0, traceParam, "")
+		}
+
+	case "Directory":
+		var req DirectoryListRequest
+		var rsp DirectoryList
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "Directory", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.Directory(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.Directory(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "Directory", 0, traceParam, "")
+		}
+
+	case "GetAssociations":
+		var req DirectoryListRequest
+		var rsp AssociationList
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetAssociations", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.GetAssociations(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.GetAssociations(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetAssociations", 0, traceParam, "")
+		}
+
+	case "GetDirectoryEntry":
+		var req DirectoryEntryRequest
+		var rsp DirectoryEntry
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetDirectoryEntry", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.GetDirectoryEntry(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.GetDirectoryEntry(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetDirectoryEntry", 0, traceParam, "")
+		}
+
+	case "UpdateDirectoryEntry":
+		var req DirectoryEntry
+		var rsp DirectoryEntry
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "UpdateDirectoryEntry", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.UpdateDirectoryEntry(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.UpdateDirectoryEntry(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "UpdateDirectoryEntry", 0, traceParam, "")
+		}
+
+	case "ListAdmins":
+		var req AdminListRequest
+		var rsp Admins
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListAdmins", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.ListAdmins(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.ListAdmins(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListAdmins", 0, traceParam, "")
+		}
+
+	case "CreateAdmin":
+		var req DirectoryEntryRequest
+		var rsp DirectoryEntry
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateAdmin", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.CreateAdmin(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.CreateAdmin(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateAdmin", 0, traceParam, "")
+		}
+
+	case "GetAdmin":
+		var req DirectoryEntryRequest
+		var rsp DirectoryEntry
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetAdmin", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.GetAdmin(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.GetAdmin(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetAdmin", 0, traceParam, "")
+		}
+
+	case "DeleteAdmin":
+		var req DirectoryEntryRequest
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "DeleteAdmin", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.DeleteAdmin(&req)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.DeleteAdmin(tarsCtx, &req)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "DeleteAdmin", 0, traceParam, "")
+		}
+
+	case "ListWorkers":
+		var req WorkerListRequest
+		var rsp Workers
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListWorkers", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.ListWorkers(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.ListWorkers(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListWorkers", 0, traceParam, "")
+		}
+
+	case "GetWorker":
+		var req Worker
+		var rsp DirectoryEntry
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetWorker", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.GetWorker(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.GetWorker(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetWorker", 0, traceParam, "")
+		}
+
+	case "DeleteWorker":
+		var req Worker
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "DeleteWorker", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.DeleteWorker(&req)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.DeleteWorker(tarsCtx, &req)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "DeleteWorker", 0, traceParam, "")
+		}
+
+	case "CreateWorker":
+		var req Worker
+		var rsp DirectoryEntry
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateWorker", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.CreateWorker(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.CreateWorker(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "CreateWorker", 0, traceParam, "")
+		}
+
+	case "ListTimeZones":
+		var rsp TimeZoneList
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListTimeZones", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.ListTimeZones(&rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.ListTimeZones(tarsCtx, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 1)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "ListTimeZones", 0, traceParam, "")
+		}
+
+	case "GrowthGraph":
+		var rsp GrowthGraphResponse
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GrowthGraph", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.GrowthGraph(&rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.GrowthGraph(tarsCtx, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 1)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GrowthGraph", 0, traceParam, "")
+		}
+
+	case "GetWorkerOf":
+		var req WorkerOfRequest
+		var rsp WorkerOfList
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetWorkerOf", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.GetWorkerOf(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.GetWorkerOf(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetWorkerOf", 0, traceParam, "")
+		}
+
+	case "GetAdminOf":
+		var req AdminOfRequest
+		var rsp AdminOfList
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+
+			err = req.ReadBlock(readBuf, 1, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			reqTup := tup.NewUniAttribute()
+			reqTup.Decode(readBuf)
+
+			var tupBuffer []byte
+
+			reqTup.GetBuffer("req", &tupBuffer)
+			readBuf.Reset(tupBuffer)
+			err = req.ReadBlock(readBuf, 0, true)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			var jsonData map[string]interface{}
+			decoder := json.NewDecoder(bytes.NewReader(readBuf.ToBytes()))
+			decoder.UseNumber()
+			err = decoder.Decode(&jsonData)
+			if err != nil {
+				return fmt.Errorf("decode reqpacket failed, error: %+v", err)
+			}
+			{
+				jsonStr, _ := json.Marshal(jsonData["req"])
+				req.ResetDefault()
+				if err = json.Unmarshal(jsonStr, &req); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			err = fmt.Errorf("decode reqpacket fail, error version: %d", tarsReq.IVersion)
+			return err
+		}
+
+		traceData, ok := current.GetTraceData(tarsCtx)
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSR, uint(readBuf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value["req"] = req
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSR), trace.TraceAnnotationSR, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetAdminOf", 0, traceParam, "")
+		}
+
+		var funRet int32
+		if !withContext {
+			imp := val.(CompanyServant)
+			funRet, err = imp.GetAdminOf(&req, &rsp)
+		} else {
+			imp := val.(CompanyServantWithContext)
+			funRet, err = imp.GetAdminOf(tarsCtx, &req, &rsp)
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if tarsReq.IVersion == basef.TARSVERSION {
+			buf.Reset()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			err = rsp.WriteBlock(buf, 2)
+			if err != nil {
+				return err
+			}
+
+		} else if tarsReq.IVersion == basef.TUPVERSION {
+			rspTup := tup.NewUniAttribute()
+
+			err = buf.WriteInt32(funRet, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("", buf.ToBytes())
+			rspTup.PutBuffer("tars_ret", buf.ToBytes())
+
+			buf.Reset()
+			err = rsp.WriteBlock(buf, 0)
+			if err != nil {
+				return err
+			}
+
+			rspTup.PutBuffer("rsp", buf.ToBytes())
+
+			buf.Reset()
+			err = rspTup.Encode(buf)
+			if err != nil {
+				return err
+			}
+		} else if tarsReq.IVersion == basef.JSONVERSION {
+			rspJson := map[string]interface{}{}
+			rspJson["tars_ret"] = funRet
+			rspJson["rsp"] = rsp
+
+			var rspByte []byte
+			if rspByte, err = json.Marshal(rspJson); err != nil {
+				return err
+			}
+
+			buf.Reset()
+			err = buf.WriteSliceUint8(rspByte)
+			if err != nil {
+				return err
+			}
+		}
+
+		if ok && traceData.TraceCall {
+			var traceParam string
+			traceParamFlag := traceData.NeedTraceParam(trace.EstSS, uint(buf.Len()))
+			if traceParamFlag == trace.EnpNormal {
+				value := map[string]interface{}{}
+				value[""] = funRet
+				value["rsp"] = rsp
+				p, _ := json.Marshal(value)
+				traceParam = string(p)
+			} else if traceParamFlag == trace.EnpOverMaxLen {
+				traceParam = "{\"trace_param_over_max_len\":true}"
+			}
+			tars.Trace(traceData.GetTraceKey(trace.EstSS), trace.TraceAnnotationSS, tars.GetClientConfig().ModuleName, tarsReq.SServantName, "GetAdminOf", 0, traceParam, "")
 		}
 
 	default:
