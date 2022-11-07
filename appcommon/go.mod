@@ -6,6 +6,7 @@ require (
 	github.com/TarsCloud/TarsGo v1.3.6
 	github.com/gin-contrib/sessions v0.0.5
 	github.com/gin-gonic/gin v1.8.1
+	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/jinzhu/gorm v1.9.16
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
 	golang.org/x/crypto v0.0.0-20210920023735-84f357641f63
