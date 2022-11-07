@@ -1,8 +1,13 @@
 module smsserver
-{
+{	
+	struct SmsRequest 
+	{
+    	0	require string to;
+    	1	require string body;
+	};
+
 	interface Sms
 	{
-	    int Add(int a,int b,out int c); // Some example function
-	    int Sub(int a,int b,out int c); // Some example function
+	    int QueueSend(SmsRequest req);
 	};
 };

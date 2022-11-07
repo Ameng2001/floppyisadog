@@ -1,8 +1,15 @@
 module emailserver
 {
+	struct EmailRequest 
+	{
+    	0 require string to;
+    	1 require string subject;
+    	2 require string html_body;
+    	3 require string name;
+	};
+
 	interface Email
 	{
-	    int Add(int a,int b,out int c); // Some example function
-	    int Sub(int a,int b,out int c); // Some example function
+	    int Send(EmailRequest req);
 	};
 };

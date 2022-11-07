@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+
+	"github.com/floppyisadog/smsserver/tars-protocol/smsserver"
 )
 
 // SmsImp servant implementation
@@ -21,13 +23,8 @@ func (imp *SmsImp) Destroy() {
 	//...
 }
 
-func (imp *SmsImp) Add(ctx context.Context, a int32, b int32, c *int32) (int32, error) {
+func (imp *SmsImp) QueueSend(ctx context.Context, req *smsserver.SmsRequest) (int32, error) {
 	//Doing something in your function
-	//...
-	return 0, nil
-}
-func (imp *SmsImp) Sub(ctx context.Context, a int32, b int32, c *int32) (int32, error) {
-	//Doing something in your function
-	//...
+	//TODO
 	return 0, nil
 }

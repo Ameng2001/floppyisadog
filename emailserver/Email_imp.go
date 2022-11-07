@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+
+	"github.com/floppyisadog/emailserver/tars-protocol/emailserver"
 )
 
 // EmailImp servant implementation
@@ -21,13 +23,8 @@ func (imp *EmailImp) Destroy() {
 	//...
 }
 
-func (imp *EmailImp) Add(ctx context.Context, a int32, b int32, c *int32) (int32, error) {
+func (imp *EmailImp) Send(ctx context.Context, req *emailserver.EmailRequest) (int32, error) {
 	//Doing something in your function
-	//...
-	return 0, nil
-}
-func (imp *EmailImp) Sub(ctx context.Context, a int32, b int32, c *int32) (int32, error) {
-	//Doing something in your function
-	//...
+	//TODO
 	return 0, nil
 }
