@@ -5,6 +5,8 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/ttacon/libphonenumber"
 )
 
 // StringInSlice is a function similar to "x in y" Python construct
@@ -60,4 +62,22 @@ func GetQueryString(query url.Values) string {
 		encoded = fmt.Sprintf("?%s", encoded)
 	}
 	return encoded
+}
+
+// formate phonenumber
+const (
+	defaultRegion = "CN" //
+)
+
+func ParseAndFormatPhonenumber(input string) (cleanPhonenumber string, err error) {
+	// If empty string input - return empy string
+	if input == "" {
+		return
+	}
+	p, err := libphonenumber.Parse(input, defaultRegion)
+	if err != nil {
+		return "", fmt.Errorf("invalid phone number")
+	}
+	cleanPhonenumber = libphonenumber.Format(p, libphonenumber.E164)
+	return
 }

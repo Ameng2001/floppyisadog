@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"crypto/md5"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -71,4 +73,10 @@ func AllFlashes(c *gin.Context) []interface{} {
 	}
 
 	return flashes
+}
+
+func GenerateGravatarURL(email string) string {
+	h := md5.New()
+	io.WriteString(h, email)
+	return fmt.Sprintf("https://www.gravatar.com/avatar/%x.jpg?s=400&d=identicon", h.Sum(nil))
 }
