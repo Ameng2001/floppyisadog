@@ -22,6 +22,7 @@ require (
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
@@ -36,6 +37,8 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
+	github.com/ttacon/builder v0.0.0-20170518171403-c099f663e1c2 // indirect
+	github.com/ttacon/libphonenumber v1.2.1 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	golang.org/x/crypto v0.0.0-20210920023735-84f357641f63 // indirect
 	golang.org/x/net v0.0.0-20210917221730-978cfadd31cf // indirect

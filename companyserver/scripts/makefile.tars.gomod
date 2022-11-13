@@ -10,8 +10,8 @@ GO      = ${GOROOT}/bin/go
 
 #-------------------------------------------------------------------------------
 libpath=${subst :, ,$(GOPATH)}
-#TARS2GO     := $(firstword $(subst :, , $(GOPATH)))/bin/tars2go
-TARS2GO     := tars2go
+TARS2GO     := $(firstword $(subst :, , $(GOPATH)))/bin/tars2go
+#TARS2GO     := tars2go
 GOMODULENAME:= $(shell head -n1 go.mod | awk '{print $$2}')
 
 ifeq (,$(findstring -outdir,$(J2GO_FLAG)))
