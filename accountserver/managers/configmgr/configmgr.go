@@ -70,7 +70,7 @@ func InitConfig(configFile string) {
 		ConfigInstance.Outerfactory = c.GetMap("/floppyisadog/accountserver/outerfactory/")
 
 		ConfigInstance.IsDevelopment = c.GetBoolWithDef("/floppyisadog/accountserver/<IsDevelopment>", true)
-		ConfigInstance.SigningToken = c.GetString("/floppyisadog/accountserver/<IsDevelopment>")
+		ConfigInstance.SigningToken = c.GetString("/floppyisadog/accountserver/<SigningToken>")
 	}
 }
 

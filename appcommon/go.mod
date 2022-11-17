@@ -3,6 +3,7 @@ module github.com/floppyisadog/appcommon
 go 1.19
 
 require (
+	github.com/GeertJohan/go.rice v1.0.3
 	github.com/TarsCloud/TarsGo v1.3.6
 	github.com/gin-contrib/sessions v0.0.5
 	github.com/gin-gonic/gin v1.8.1
@@ -14,6 +15,7 @@ require (
 )
 
 require (
+	github.com/daaku/go.zipexe v1.0.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
