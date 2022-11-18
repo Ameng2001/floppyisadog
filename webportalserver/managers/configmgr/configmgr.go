@@ -36,6 +36,7 @@ type Config struct {
 	IsDevelopment      bool   `default:"True"`
 	SigningToken       string
 	EnvConfig          map[string]*EnvironmentConfig
+	Outerfactory       map[string]string
 	Pages              PageConfig
 }
 
@@ -74,6 +75,8 @@ func InitConfig(configFile string) {
 
 			ConfigInstance.EnvConfig[env] = envInfo
 		}
+
+		ConfigInstance.Outerfactory = c.GetMap("/floppyisadog/webportalserver/outerfactory/")
 
 		//parse page config
 		ConfigInstance.Pages.Version = c.GetString("floppyisadog/webportalserver/pages/<Version>")
@@ -189,4 +192,8 @@ func GetConfig() *Config {
 
 func GetEnvConfig() *EnvironmentConfig {
 	return ConfigInstance.EnvConfig[ConfigInstance.CurrentEnvironment]
+}
+
+func GetPages() *PageConfig {
+	return &ConfigInstance.Pages
 }

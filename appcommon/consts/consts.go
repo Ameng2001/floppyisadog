@@ -1,15 +1,14 @@
 package consts
 
 const (
-	cookieName = "staffjoy-faraday"
-	cookie
-	uuidKey       = "uuid"
-	supportKey    = "support"
-	expirationKey = "exp"
-	// for GRPC
-	currentUserMetadata = "faraday-current-user-uuid"
-	// header set for internal user id
-	currentUserHeader = "Grpc-Metadata-Faraday-Current-User-Uuid"
+	CookieName = "staffjoy-faraday"
+	// uuidKey       = "uuid"
+	// supportKey    = "support"
+	// expirationKey = "exp"
+	// // for GRPC
+	// currentUserMetadata = "faraday-current-user-uuid"
+	// // header set for internal user id
+	// currentUserHeader = "Grpc-Metadata-Faraday-Current-User-Uuid"
 
 	// AuthorizationHeader is the http request header
 	// key used for accessing the internal authorization.
