@@ -55,12 +55,8 @@ var (
 	}
 )
 
-func init() {
-	Assets()
-}
-
 // Assets loading template and image
-func Assets() {
+func InitAssets() {
 	// find swagger rice.Box
 	assetsBox, err := rice.FindBox("assets")
 	if err != nil {

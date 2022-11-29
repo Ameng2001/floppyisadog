@@ -92,6 +92,9 @@ tar: $(TARGET) $(CONFIG)
 		echo "tar cvfz $(TARGET).tgz ..."; \
 	fi
 
+TARS_WEB_TOKEN := eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJhZG1pbiIsImlhdCI6MTY2OTUyNjk2NCwiZXhwIjoxNzY0MzA3NzY0fQ.hMIOD7yWf42GaPyqWHs8TxC2NJJLGHoP5gvAFEN8Frg
+upload:
+	curl -s 127.0.0.1:3000/api/upload_and_publish?ticket=${TARS_WEB_TOKEN} -Fsuse=@${TARGET}.tgz -Fapplication=${APP} -Fmodule_name=${TARGET} -Fcomment=auto_upload
 
 HELP += $(HELP_TAR)
 

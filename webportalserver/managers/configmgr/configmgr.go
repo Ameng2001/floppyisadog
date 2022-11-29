@@ -62,7 +62,9 @@ func InitConfig(configFile string) {
 		ConfigInstance.IsDevelopment = c.GetBoolWithDef("/floppyisadog/webportalserver/<IsDevelopment>", true)
 		ConfigInstance.SigningToken = c.GetString("/floppyisadog/webportalserver/<SigningToken>")
 		ConfigInstance.CurrentEnvironment = c.GetString("/floppyisadog/webportalserver/<CurrentEnvironment>")
+
 		envs := c.GetDomain("/floppyisadog/webportalserver/environment")
+		ConfigInstance.EnvConfig = make(map[string]*EnvironmentConfig)
 		for _, env := range envs {
 			envInfo := &EnvironmentConfig{
 				Name:         c.GetString("/floppyisadog/webportalserver/environment/" + env + "<Name>"),
@@ -72,15 +74,18 @@ func InitConfig(configFile string) {
 				LogLevel:     c.GetString("/floppyisadog/webportalserver/environment/" + env + "<LogLevel>"),
 				Scheme:       c.GetString("/floppyisadog/webportalserver/environment/" + env + "<Scheme>"),
 			}
-
 			ConfigInstance.EnvConfig[env] = envInfo
+			fmt.Printf("Envirionment (%s) : (%v)\n", env, envInfo)
 		}
 
 		ConfigInstance.Outerfactory = c.GetMap("/floppyisadog/webportalserver/outerfactory/")
+		fmt.Printf("Init Proxy config: (%v)\n", ConfigInstance.Outerfactory)
 
 		//parse page config
-		ConfigInstance.Pages.Version = c.GetString("floppyisadog/webportalserver/pages/<Version>")
+		ConfigInstance.Pages.Version = c.GetString("/floppyisadog/webportalserver/pages/<Version>")
+		fmt.Printf("ConfigInstance.Pages.Version = (%s)", ConfigInstance.Pages.Version)
 		staticPages := c.GetDomain("/floppyisadog/webportalserver/pages/staticpages")
+		ConfigInstance.Pages.StaticPages = make(map[string]*pages.Page)
 		for _, page := range staticPages {
 			pageInfo := c.GetMap("/floppyisadog/webportalserver/pages/staticpages/" + page)
 			ConfigInstance.Pages.StaticPages[pageInfo["PATH"]] = &pages.Page{
@@ -90,7 +95,9 @@ func InitConfig(configFile string) {
 				CSSId:        pageInfo["CSSId"],
 				Version:      ConfigInstance.Pages.Version,
 			}
+			fmt.Printf("Init static page (%s) = (%v)\n", page, pageInfo)
 		}
+		fmt.Printf("Init static pages: (%v)\n", ConfigInstance.Pages.StaticPages)
 
 		pageInfo := c.GetMap("/floppyisadog/webportalserver/pages/confirm")
 		ConfigInstance.Pages.ConfirmPage = &pages.Page{
@@ -164,6 +171,7 @@ func InitConfig(configFile string) {
 		}
 
 		episodePages := c.GetDomain("/floppyisadog/webportalserver/pages/breaktime-episodes")
+		ConfigInstance.Pages.EpisodesPages = make(map[string]*pages.BreaktimeEpisodePage)
 		for _, page := range episodePages {
 			pageInfo := c.GetMap("/floppyisadog/webportalserver/pages/breaktime-episodes/" + page)
 			ConfigInstance.Pages.EpisodesPages[page] = &pages.BreaktimeEpisodePage{

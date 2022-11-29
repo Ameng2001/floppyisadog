@@ -42,6 +42,7 @@ func main() {
 	r.Use(adapter.Wrap(CSRF))
 
 	//load assets and templates
+	errorpages.InitAssets()
 	assetsmgr.LoadAssets()
 	assetsmgr.RegisteStatic(r)
 

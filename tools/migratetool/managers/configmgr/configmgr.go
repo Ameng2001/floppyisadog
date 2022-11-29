@@ -34,9 +34,9 @@ var (
 			Type:         "mysql",
 			Host:         "localhost",
 			Port:         3306,
-			User:         "floppy_oauth2_server",
-			Password:     "",
-			DatabaseName: "floppy_oauth2_server",
+			User:         "root",
+			Password:     "123456",
+			DatabaseName: "db_staffjoy",
 			MaxIdleConns: 5,
 			MaxOpenConns: 5,
 		},
@@ -54,7 +54,7 @@ func InitConfig(configFile string) {
 			ConfigInstance = nil
 		}
 
-		dbcfg := c.GetMap("/floppyisadog/toolkit/database/")
+		dbcfg := c.GetMap("/floppyisadog/migratetool/database/")
 		ConfigInstance.Database.Type = dbcfg["Type"]
 		ConfigInstance.Database.Host = dbcfg["Host"]
 		ConfigInstance.Database.Port = utils.StringToInt(dbcfg["Port"])
@@ -64,7 +64,7 @@ func InitConfig(configFile string) {
 		ConfigInstance.Database.MaxIdleConns = utils.StringToInt(dbcfg["MaxIdleConns"])
 		ConfigInstance.Database.MaxOpenConns = utils.StringToInt(dbcfg["MaxOpenConns"])
 
-		ConfigInstance.IsDevelopment = c.GetBoolWithDef("/floppyisadog/toolkit/<IsDevelopment>", true)
+		ConfigInstance.IsDevelopment = c.GetBoolWithDef("/floppyisadog/migratetool/<IsDevelopment>", true)
 
 	}
 }

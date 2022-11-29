@@ -2,7 +2,7 @@ APP       := floppyisadog
 TARGET    := webportalserver
 MFLAGS    :=
 DFLAGS    :=
-CONFIG    := client
+CONFIG    := config
 STRIP_FLAG:= N
 J2GO_FLAG:= 
 
