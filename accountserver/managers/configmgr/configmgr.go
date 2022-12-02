@@ -5,6 +5,7 @@ import (
 
 	"github.com/TarsCloud/TarsGo/tars/util/conf"
 	"github.com/floppyisadog/appcommon/utils"
+	"github.com/floppyisadog/appcommon/utils/environment"
 )
 
 // DatabaseConfig stores database connection options
@@ -68,6 +69,8 @@ func InitConfig(configFile string) {
 		ConfigInstance.Database.MaxOpenConns = utils.StringToInt(dbcfg["MaxOpenConns"])
 
 		ConfigInstance.Outerfactory = c.GetMap("/floppyisadog/accountserver/outerfactory/")
+
+		environment.InitEnvironment(c, "/floppyisadog/accountserver/environment/")
 
 		ConfigInstance.IsDevelopment = c.GetBoolWithDef("/floppyisadog/accountserver/<IsDevelopment>", true)
 		ConfigInstance.SigningToken = c.GetString("/floppyisadog/accountserver/<SigningToken>")

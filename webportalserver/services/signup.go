@@ -18,7 +18,7 @@ func signUpHandler(c *gin.Context) {
 	name := c.PostForm("name")
 	email := c.PostForm("email")
 
-	if len(name) <= 0 {
+	if len(email) <= 0 {
 		c.Redirect(http.StatusFound, signUpPath)
 	}
 

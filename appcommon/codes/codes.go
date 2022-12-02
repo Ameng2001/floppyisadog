@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	OK                 int32 = 0
+	OK                 int32 = 100
 	Canceled           int32 = 1
 	Unknown            int32 = 2
 	InvalidArgument    int32 = 3
@@ -61,6 +61,7 @@ var (
 	ErrAccountAlreadyExists           = errors.New("account already exists")
 	ErrGenerateUUID                   = errors.New("can not generate uuid")
 	ErrCreateAccount                  = errors.New("create account error")
+	ErrSendActiveEmail                = errors.New("send active email error")
 )
 
 // define inner errors to standard http error codes

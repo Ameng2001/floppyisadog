@@ -10,6 +10,7 @@ import (
 	"github.com/floppyisadog/appcommon/consts"
 	"github.com/floppyisadog/appcommon/helpers"
 	"github.com/floppyisadog/appcommon/utils/crypto"
+	"github.com/floppyisadog/appcommon/utils/environment"
 	"github.com/floppyisadog/companyserver/tars-protocol/companyserver"
 
 	"github.com/floppyisadog/appcommon/errorpages"
@@ -17,13 +18,13 @@ import (
 	"github.com/floppyisadog/webportalserver/managers/configmgr"
 	"github.com/floppyisadog/webportalserver/managers/logmgr"
 	"github.com/floppyisadog/webportalserver/managers/outerfactory"
+	"github.com/floppyisadog/webportalserver/middleware"
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/csrf"
 )
 
 func activateHandler(c *gin.Context) {
 	page := configmgr.GetPages().ActivatePage
-	page.CsrfField = csrf.TemplateField(c.Request)
+	page.CsrfField = middleware.TemplateField(c)
 
 	token := c.Param("token")
 	if len(token) == 0 {
@@ -105,7 +106,7 @@ func activateHandler(c *gin.Context) {
 				acccountInfo.Support,
 				false,
 				configmgr.GetConfig().SigningToken,
-				configmgr.GetEnvConfig().ExternalApex,
+				environment.GetCurrEnv().ExternalApex,
 				c.Writer,
 			)
 
@@ -138,11 +139,11 @@ func activateHandler(c *gin.Context) {
 
 			var destination *url.URL
 			if len(adminList.Companies) != 0 || acccountInfo.Support {
-				destination = &url.URL{Host: "app." + configmgr.GetEnvConfig().ExternalApex, Scheme: "http"}
+				destination = &url.URL{Host: "app." + environment.GetCurrEnv().ExternalApex, Scheme: "http"}
 			} else if len(workerList.Teams) != 0 {
-				destination = &url.URL{Host: "myaccount." + configmgr.GetEnvConfig().ExternalApex, Scheme: "http"}
+				destination = &url.URL{Host: "myaccount." + environment.GetCurrEnv().ExternalApex, Scheme: "http"}
 			} else {
-				destination = &url.URL{Host: "www." + configmgr.GetEnvConfig().ExternalApex, Path: newCompanyPath, Scheme: "http"}
+				destination = &url.URL{Host: "www." + environment.GetCurrEnv().ExternalApex, Path: newCompanyPath, Scheme: "http"}
 			}
 			c.Redirect(http.StatusFound, destination.String())
 		}

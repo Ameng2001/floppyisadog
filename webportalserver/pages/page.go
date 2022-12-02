@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/floppyisadog/webportalserver/managers/assetsmgr"
+	"github.com/floppyisadog/webportalserver/middleware"
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/csrf"
 )
 
 const (
@@ -74,7 +74,7 @@ func (p *Page) Handler(c *gin.Context) {
 		p.Description = defaultDescription
 	}
 
-	p.CsrfField = csrf.TemplateField(c.Request)
+	p.CsrfField = middleware.TemplateField(c)
 
 	err := assetsmgr.GetTemplate().ExecuteTemplate(c.Writer, p.TemplateName, p)
 

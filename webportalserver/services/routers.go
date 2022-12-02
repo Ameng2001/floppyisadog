@@ -15,13 +15,13 @@ const (
 func RegisteRoutes(router *gin.RouterGroup) {
 	router.GET("/health", healthCheck)
 	router.POST("/confirm/", signUpHandler)
-	router.GET("/activate/{token}", activateHandler)
-	router.GET("/reset/{token}", confirmResetHandler)
+	router.GET("/activate/:token", activateHandler)
+	router.GET("/reset/:token", confirmResetHandler)
 	router.GET(loginPath, loginHandler)
 	router.GET("/logout/", logoutHandler)
 	router.GET(newCompanyPath, newCompanyHandler)
 	router.GET("/breaktime/", breaktimeListHandler)
-	router.GET("/breaktime/{slug}", breaktimeEpisodeHandler)
+	router.GET("/breaktime/:slug", breaktimeEpisodeHandler)
 	router.GET(passwordResetPath, resetHandler)
 
 	for route, info := range configmgr.GetConfig().Pages.StaticPages {

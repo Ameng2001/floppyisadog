@@ -16,15 +16,17 @@ import (
 	"github.com/floppyisadog/appcommon/utils"
 	"github.com/floppyisadog/appcommon/utils/crypto"
 	"github.com/floppyisadog/appcommon/utils/database"
+	"github.com/floppyisadog/emailserver/tars-protocol/emailserver"
 	"github.com/floppyisadog/smsserver/tars-protocol/smsserver"
 	"github.com/jinzhu/gorm"
 )
 
 // AccountImp servant implementation
 type AccountImp struct {
-	config *configmgr.Config
-	db     *gorm.DB
-	smsPrx *smsserver.Sms
+	config   *configmgr.Config
+	db       *gorm.DB
+	smsPrx   *smsserver.Sms
+	emailPrx *emailserver.Email
 }
 
 // Init servant init
@@ -37,6 +39,10 @@ func (imp *AccountImp) Init() error {
 	smsObj := imp.config.Outerfactory["SmsObj"]
 	imp.smsPrx = new(smsserver.Sms)
 	comm.StringToProxy(smsObj, imp.smsPrx)
+
+	emailObj := imp.config.Outerfactory["EmailObj"]
+	imp.emailPrx = new(emailserver.Email)
+	comm.StringToProxy(emailObj, imp.emailPrx)
 
 	return nil
 }
@@ -63,7 +69,7 @@ func (imp *AccountImp) Create(ctx context.Context, req *accountserver.CreateAcco
 	}
 
 	req.Email = strings.TrimSpace(strings.ToLower(req.Email))
-	if len(req.Email) > 0 && strings.Index(req.Email, "@") == -1 {
+	if len(req.Email) > 0 && !strings.Contains(req.Email, "@") {
 		return codes.InvalidArgument, codes.ErrInvalidArgument
 	}
 
@@ -72,14 +78,18 @@ func (imp *AccountImp) Create(ctx context.Context, req *accountserver.CreateAcco
 		return codes.InvalidArgument, codes.ErrInvalidArgument
 	}
 
-	_, nofound := repos.FindAccountByEmail(req.Email)
-	if !nofound {
-		return codes.AlreadyExists, codes.ErrAccountAlreadyExists
+	if req.Email != "" {
+		_, nofound := repos.FindAccountByEmail(req.Email)
+		if !nofound {
+			return codes.AlreadyExists, codes.ErrAccountAlreadyExists
+		}
 	}
 
-	_, nofound = repos.FindAccountByPhonenumber(req.Phonenumber)
-	if !nofound {
-		return codes.AlreadyExists, codes.ErrAccountAlreadyExists
+	if req.Phonenumber != "" {
+		_, nofound := repos.FindAccountByPhonenumber(req.Phonenumber)
+		if !nofound {
+			return codes.AlreadyExists, codes.ErrAccountAlreadyExists
+		}
 	}
 
 	uuid, err := crypto.NewUUID()
@@ -105,7 +115,9 @@ func (imp *AccountImp) Create(ctx context.Context, req *accountserver.CreateAcco
 
 	go imp.syncUser(accountDAO.ID)
 
-	imp.sendActiveEmail(accountDAO)
+	if err := imp.sendActiveEmail(accountDAO); err != nil {
+		return codes.Unknown, codes.ErrSendActiveEmail
+	}
 
 	//TODO
 	//AuditLog

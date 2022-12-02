@@ -2,7 +2,7 @@ APP       := floppyisadog
 TARGET    := accountserver
 MFLAGS    :=
 DFLAGS    :=
-CONFIG    := client
+CONFIG    := config
 STRIP_FLAG:= N
 J2GO_FLAG:= 
 

@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/TarsCloud/TarsGo v1.3.6
 	github.com/floppyisadog/appcommon v0.0.0-00010101000000-000000000000
+	github.com/floppyisadog/emailserver v0.0.0-00010101000000-000000000000
 	github.com/floppyisadog/smsserver v0.0.0-00010101000000-000000000000
 	github.com/jinzhu/gorm v1.9.16
 )
@@ -46,3 +47,5 @@ require (
 replace github.com/floppyisadog/appcommon => ../appcommon
 
 replace github.com/floppyisadog/smsserver => ../smsserver
+
+replace github.com/floppyisadog/emailserver => ../emailserver

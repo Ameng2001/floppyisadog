@@ -4,17 +4,9 @@ import (
 	"fmt"
 
 	"github.com/TarsCloud/TarsGo/tars/util/conf"
+	"github.com/floppyisadog/appcommon/utils/environment"
 	"github.com/floppyisadog/webportalserver/pages"
 )
-
-type EnvironmentConfig struct {
-	Name         string
-	IsDebug      bool
-	ExternalApex string // Apex domain off of which services operate externally
-	InternalApex string // Apex domain off of which services operate internally
-	LogLevel     string // Verbosity of logging
-	Scheme       string // default URL scheme - http or https
-}
 
 type PageConfig struct {
 	Version           string
@@ -32,12 +24,10 @@ type PageConfig struct {
 
 // Config stores all configuration options
 type Config struct {
-	CurrentEnvironment string `default:"production"`
-	IsDevelopment      bool   `default:"True"`
-	SigningToken       string
-	EnvConfig          map[string]*EnvironmentConfig
-	Outerfactory       map[string]string
-	Pages              PageConfig
+	IsDevelopment bool `default:"True"`
+	SigningToken  string
+	Outerfactory  map[string]string
+	Pages         PageConfig
 }
 
 // DefaultConfig ...
@@ -61,22 +51,8 @@ func InitConfig(configFile string) {
 
 		ConfigInstance.IsDevelopment = c.GetBoolWithDef("/floppyisadog/webportalserver/<IsDevelopment>", true)
 		ConfigInstance.SigningToken = c.GetString("/floppyisadog/webportalserver/<SigningToken>")
-		ConfigInstance.CurrentEnvironment = c.GetString("/floppyisadog/webportalserver/<CurrentEnvironment>")
 
-		envs := c.GetDomain("/floppyisadog/webportalserver/environment")
-		ConfigInstance.EnvConfig = make(map[string]*EnvironmentConfig)
-		for _, env := range envs {
-			envInfo := &EnvironmentConfig{
-				Name:         c.GetString("/floppyisadog/webportalserver/environment/" + env + "<Name>"),
-				IsDebug:      c.GetBoolWithDef("/floppyisadog/webportalserver/environment/"+env+"<IsDebug>", false),
-				ExternalApex: c.GetString("/floppyisadog/webportalserver/environment/" + env + "<ExternalApex>"),
-				InternalApex: c.GetString("/floppyisadog/webportalserver/environment/" + env + "<InternalApex>"),
-				LogLevel:     c.GetString("/floppyisadog/webportalserver/environment/" + env + "<LogLevel>"),
-				Scheme:       c.GetString("/floppyisadog/webportalserver/environment/" + env + "<Scheme>"),
-			}
-			ConfigInstance.EnvConfig[env] = envInfo
-			fmt.Printf("Envirionment (%s) : (%v)\n", env, envInfo)
-		}
+		environment.InitEnvironment(c, "/floppyisadog/webportalserver/environment/")
 
 		ConfigInstance.Outerfactory = c.GetMap("/floppyisadog/webportalserver/outerfactory/")
 		fmt.Printf("Init Proxy config: (%v)\n", ConfigInstance.Outerfactory)
@@ -196,10 +172,6 @@ func GetConfig() *Config {
 	}
 
 	return ConfigInstance
-}
-
-func GetEnvConfig() *EnvironmentConfig {
-	return ConfigInstance.EnvConfig[ConfigInstance.CurrentEnvironment]
 }
 
 func GetPages() *PageConfig {

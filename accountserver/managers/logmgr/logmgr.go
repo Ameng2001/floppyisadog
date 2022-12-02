@@ -11,4 +11,7 @@ var (
 	RWARN   = RLOGGER.Warn
 
 	DLOGGER = tars.GetDayLogger("accountserver", 1)
+	DERRORF = DLOGGER.Errorf
+	DINFOF  = DLOGGER.Infof
+	DWARNF  = DLOGGER.Warnf
 )
