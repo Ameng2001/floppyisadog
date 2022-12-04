@@ -21,6 +21,10 @@ func (c *OuterFactory) initialize() bool {
 	c.AccountPrx = new(accountserver.Account)
 	comm.StringToProxy(accountObj, c.AccountPrx)
 
+	companyObj := configmgr.GetConfig().Outerfactory["CompanyObj"]
+	c.CompanyPrx = new(companyserver.Company)
+	comm.StringToProxy(companyObj, c.CompanyPrx)
+
 	return true
 }
 

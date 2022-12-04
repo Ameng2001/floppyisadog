@@ -25,7 +25,6 @@ type Config struct {
 	Database      DatabaseConfig
 	Outerfactory  map[string]string
 	IsDevelopment bool `default:"True"`
-	SigningToken  string
 }
 
 // DefaultConfig ...
@@ -44,7 +43,6 @@ var (
 			MaxOpenConns: 5,
 		},
 		IsDevelopment: true,
-		SigningToken:  "joystaff-account",
 	}
 )
 
@@ -70,10 +68,9 @@ func InitConfig(configFile string) {
 
 		ConfigInstance.Outerfactory = c.GetMap("/floppyisadog/accountserver/outerfactory/")
 
-		environment.InitEnvironment(c, "/floppyisadog/accountserver/environment/")
+		environment.InitEnvironment(c, "/floppyisadog/environment/")
 
 		ConfigInstance.IsDevelopment = c.GetBoolWithDef("/floppyisadog/accountserver/<IsDevelopment>", true)
-		ConfigInstance.SigningToken = c.GetString("/floppyisadog/accountserver/<SigningToken>")
 	}
 }
 

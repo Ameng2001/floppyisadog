@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -80,4 +81,34 @@ func Logout(res http.ResponseWriter, domain string) {
 		Domain: "." + domain,
 	}
 	http.SetCookie(res, cookie)
+}
+
+// GetCurrentUserUUIDFromMetadata allows backend gRPC services with
+// authorization methods of AuthenticatedUser or SupportUser to access
+// the uuid of the user making the request
+func GetCurrentUserUUIDFromMetadata(c context.Context) (uuid string, err error) {
+	metadata, ok := current.GetRequestContext(c)
+	if !ok {
+		return "", codes.ErrRequestContextMissing
+	}
+
+	res, ok := metadata[consts.CurrentUserMetadata]
+	if !ok || len(res) == 0 {
+		return "", fmt.Errorf("user not authenticated")
+	}
+
+	return res, nil
+}
+
+// GetCurrentUserUUIDFromHeader allows backend http services with
+// authorization methods of AuthenticatedUser or SupportUser to access
+// the uuid of the user making the request
+func GetCurrentUserUUIDFromHeader(data http.Header) (uuid string, err error) {
+	res, ok := data[consts.CurrentUserHeader]
+	if !ok || len(res) == 0 {
+		err = fmt.Errorf("user not authenticated")
+		return
+	}
+	uuid = res[0]
+	return
 }

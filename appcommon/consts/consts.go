@@ -1,14 +1,14 @@
 package consts
 
 const (
-	CookieName = "staffjoy-faraday"
+	CookieName = "staffjoy-gateway"
 	// uuidKey       = "uuid"
 	// supportKey    = "support"
 	// expirationKey = "exp"
-	// // for GRPC
-	// currentUserMetadata = "faraday-current-user-uuid"
-	// // header set for internal user id
-	// currentUserHeader = "Grpc-Metadata-Faraday-Current-User-Uuid"
+	// for GRPC
+	CurrentUserMetadata = "gateway-current-user-uuid"
+	// header set for internal user id
+	CurrentUserHeader = "Grpc-Metadata-Gateway-Current-User-Uuid"
 
 	// AuthorizationHeader is the http request header
 	// key used for accessing the internal authorization.
@@ -20,15 +20,15 @@ const (
 
 	// AuthorizationAnonymousWeb is set as the Authorization header to denote that
 	// a request is being made bu an unauthenticated web user
-	AuthorizationAnonymousWeb = "faraday-anonymous"
+	AuthorizationAnonymousWeb = "gateway-anonymous"
 
 	// AuthorizationAuthenticatedUser is set as the Authorization header to denote that
 	// a request is being made by an authenticated web user
-	AuthorizationAuthenticatedUser = "faraday-authenticated"
+	AuthorizationAuthenticatedUser = "gateway-authenticated"
 
 	// AuthorizationSupportUser is set as the Authorization header to denote that
 	// a request is being made by a Staffjoy team me
-	AuthorizationSupportUser = "faraday-support"
+	AuthorizationSupportUser = "gateway-support"
 
 	// AuthorizationWWWService is set as the Authorization header to denote that
 	// a request is being made by the www login / signup system

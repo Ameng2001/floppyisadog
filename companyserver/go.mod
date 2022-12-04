@@ -2,7 +2,10 @@ module github.com/floppyisadog/companyserver
 
 go 1.19
 
-require github.com/TarsCloud/TarsGo v1.3.6
+require (
+	github.com/TarsCloud/TarsGo v1.3.6
+	github.com/floppyisadog/appcommon v0.0.0-00010101000000-000000000000
+)
 
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -21,8 +24,10 @@ require (
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	golang.org/x/crypto v0.0.0-20210920023735-84f357641f63 // indirect
 	golang.org/x/net v0.0.0-20210917221730-978cfadd31cf // indirect
-	golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069 // indirect
+	golang.org/x/sys v0.0.0-20220408201424-a24fb2fb8a0f // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
+
+replace github.com/floppyisadog/appcommon => ../appcommon

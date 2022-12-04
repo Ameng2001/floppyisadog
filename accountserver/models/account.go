@@ -17,7 +17,7 @@ type Account struct {
 	BaseGormModel
 	Email            string    `sql:"type:varchar(255);not null;unique"`
 	Name             string    `sql:"type:varchar(255);not null"`
-	PhoneNumber      string    `sql:"type:varchar(255);not null;unique"`
+	PhoneNumber      string    `sql:"type:varchar(255);not null"`
 	ConfirmAndActive bool      `sql:"default:false"`
 	MemberSince      time.Time `sql:"not null;DEFAULT:current_timestamp"`
 	PasswordHash     string    `sql:"type:varchar(100)"`

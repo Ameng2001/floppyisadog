@@ -15,7 +15,8 @@ const (
 func RegisteRoutes(router *gin.RouterGroup) {
 	router.GET("/health", healthCheck)
 	router.POST("/confirm/", signUpHandler)
-	router.GET("/activate/:token", activateHandler)
+	router.GET("/activate/:token", activateGetHandler)
+	router.POST("/activate/:token", activatePostHandler)
 	router.GET("/reset/:token", confirmResetHandler)
 	router.GET(loginPath, loginHandler)
 	router.GET("/logout/", logoutHandler)

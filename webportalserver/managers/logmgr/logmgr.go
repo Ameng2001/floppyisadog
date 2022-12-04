@@ -6,9 +6,9 @@ import (
 
 var (
 	RLOGGER = tars.GetLogger("webportalserver")
-	RERROR  = RLOGGER.Error
-	RINFO   = RLOGGER.Info
-	RWARN   = RLOGGER.Warn
+	RERROR  = RLOGGER.Errorf
+	RINFO   = RLOGGER.Infof
+	RWARN   = RLOGGER.Warnf
 
 	DLOGGER = tars.GetDayLogger("webportalserver", 1)
 )

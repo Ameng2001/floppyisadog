@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/TarsCloud/TarsGo/tars"
 	"github.com/floppyisadog/appcommon/errorpages"
+	"github.com/floppyisadog/appcommon/utils/environment"
 	"github.com/floppyisadog/webportalserver/managers/assetsmgr"
 	"github.com/floppyisadog/webportalserver/managers/configmgr"
 	"github.com/floppyisadog/webportalserver/middleware"
@@ -14,6 +15,7 @@ import (
 func main() {
 	cfg := tars.GetServerConfig()
 
+	tars.AddConfig("environment.conf")
 	tars.AddConfig("webportalserver.conf")
 	configmgr.InitConfig(cfg.BasePath + "webportalserver.conf")
 
@@ -23,7 +25,7 @@ func main() {
 	r.Use(gzip.Gzip(gzip.DefaultCompression))
 
 	//CSRF middleware
-	middleware.InitCSRF(r, configmgr.GetConfig().SigningToken)
+	middleware.InitCSRF(r, environment.GetCurrEnv().CSRFTokenSecret)
 
 	//load assets and templates
 	errorpages.InitAssets()

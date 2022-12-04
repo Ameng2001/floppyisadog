@@ -6,9 +6,9 @@ import (
 
 var (
 	RLOGGER = tars.GetLogger("accountserver")
-	RERROR  = RLOGGER.Error
-	RINFO   = RLOGGER.Info
-	RWARN   = RLOGGER.Warn
+	RERROR  = RLOGGER.Errorf
+	RINFO   = RLOGGER.Infof
+	RWARN   = RLOGGER.Warnf
 
 	DLOGGER = tars.GetDayLogger("accountserver", 1)
 	DERRORF = DLOGGER.Errorf

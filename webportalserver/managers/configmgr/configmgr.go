@@ -25,7 +25,6 @@ type PageConfig struct {
 // Config stores all configuration options
 type Config struct {
 	IsDevelopment bool `default:"True"`
-	SigningToken  string
 	Outerfactory  map[string]string
 	Pages         PageConfig
 }
@@ -50,9 +49,8 @@ func InitConfig(configFile string) {
 		}
 
 		ConfigInstance.IsDevelopment = c.GetBoolWithDef("/floppyisadog/webportalserver/<IsDevelopment>", true)
-		ConfigInstance.SigningToken = c.GetString("/floppyisadog/webportalserver/<SigningToken>")
 
-		environment.InitEnvironment(c, "/floppyisadog/webportalserver/environment/")
+		environment.InitEnvironment(c, "/floppyisadog/environment/")
 
 		ConfigInstance.Outerfactory = c.GetMap("/floppyisadog/webportalserver/outerfactory/")
 		fmt.Printf("Init Proxy config: (%v)\n", ConfigInstance.Outerfactory)

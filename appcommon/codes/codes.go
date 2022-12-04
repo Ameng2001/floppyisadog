@@ -62,6 +62,10 @@ var (
 	ErrGenerateUUID                   = errors.New("can not generate uuid")
 	ErrCreateAccount                  = errors.New("create account error")
 	ErrSendActiveEmail                = errors.New("send active email error")
+
+	//errors for account
+	ErrUpdateAccountError = errors.New("update account error")
+	ErrInternal           = errors.New("internal error")
 )
 
 // define inner errors to standard http error codes

@@ -22,7 +22,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func activateHandler(c *gin.Context) {
+func activateGetHandler(c *gin.Context) {
 	page := configmgr.GetPages().ActivatePage
 	page.CsrfField = middleware.TemplateField(c)
 
@@ -32,7 +32,7 @@ func activateHandler(c *gin.Context) {
 		return
 	}
 
-	email, uuid, err := crypto.VerifyEmailConfirmationToken(token, configmgr.GetConfig().SigningToken)
+	email, uuid, err := crypto.VerifyEmailConfirmationToken(token, environment.GetCurrEnv().JWTTokenSecret)
 	if err != nil {
 		c.Redirect(http.StatusFound, passwordResetPath)
 	}
@@ -48,7 +48,49 @@ func activateHandler(c *gin.Context) {
 		md,
 	)
 	if ret != codes.OK {
+		logmgr.RERROR("call accountserver:get error(%d)(%v)\n", ret, err)
+		errorpages.NotFound(c.Writer)
+		return
+	}
+
+	page.Email = email
+	page.Name = acccountInfo.Name
+	page.Phonenumber = acccountInfo.Phonenumber
+
+	if err = assetsmgr.GetTemplate().ExecuteTemplate(c.Writer, page.TemplateName, page); err != nil {
 		panic(err)
+	}
+}
+
+func activatePostHandler(c *gin.Context) {
+	page := configmgr.GetPages().ActivatePage
+	page.CsrfField = middleware.TemplateField(c)
+
+	token := c.Param("token")
+	if len(token) == 0 {
+		errorpages.NotFound(c.Writer)
+		return
+	}
+
+	email, uuid, err := crypto.VerifyEmailConfirmationToken(token, environment.GetCurrEnv().JWTTokenSecret)
+	if err != nil {
+		c.Redirect(http.StatusFound, passwordResetPath)
+	}
+
+	md := make(map[string]string)
+	md[consts.AuthorizationMetadata] = consts.AuthorizationWWWService
+
+	acccountInfo := new(accountserver.AccountInfo)
+	ret, err := outerfactory.Inst().AccountPrx.GetWithContext(
+		context.Background(),
+		&accountserver.GetAccountRequest{Uuid: uuid},
+		acccountInfo,
+		md,
+	)
+	if ret != codes.OK {
+		logmgr.RERROR("call accountserver:get error(%d)(%v)\n", ret, err)
+		errorpages.NotFound(c.Writer)
+		return
 	}
 
 	page.Email = email
@@ -64,7 +106,7 @@ func activateHandler(c *gin.Context) {
 		page.Name = name
 		page.Phonenumber = phonenumber
 
-		logmgr.RINFO("tos %v", tos)
+		logmgr.RINFO("tos：%v\n", tos)
 
 		if len(password) < 6 {
 			page.ErrorMessage = "Your password must be at least 6 characters long"
@@ -80,15 +122,20 @@ func activateHandler(c *gin.Context) {
 			acccountInfo.Name = name
 			acccountInfo.Phonenumber = phonenumber
 
+			md := make(map[string]string)
+			md[consts.AuthorizationMetadata] = consts.AuthorizationWWWService
 			ret, err := outerfactory.Inst().AccountPrx.UpdateWithContext(
 				context.Background(),
 				acccountInfo,
 				md,
 			)
 			if ret != codes.OK {
+				logmgr.RERROR("call update account error:(%d,%v)\n", ret, err)
 				panic(err)
 			}
 
+			md = make(map[string]string)
+			md[consts.AuthorizationMetadata] = consts.AuthorizationWWWService
 			ret, err = outerfactory.Inst().AccountPrx.UpdatePasswordWithContext(
 				context.Background(),
 				&accountserver.UpdatePasswordRequest{
@@ -98,6 +145,7 @@ func activateHandler(c *gin.Context) {
 				md,
 			)
 			if ret != codes.OK {
+				logmgr.RERROR("call updatepassword account error:(%d,%v)\n", ret, err)
 				panic(err)
 			}
 
@@ -105,7 +153,7 @@ func activateHandler(c *gin.Context) {
 				acccountInfo.Uuid,
 				acccountInfo.Support,
 				false,
-				configmgr.GetConfig().SigningToken,
+				environment.GetCurrEnv().JWTTokenSecret,
 				environment.GetCurrEnv().ExternalApex,
 				c.Writer,
 			)
@@ -121,6 +169,7 @@ func activateHandler(c *gin.Context) {
 				md,
 			)
 			if ret != codes.OK {
+				logmgr.RERROR("call GetWorkerOfWithContext error:(%d,%v)\n", ret, err)
 				panic(err)
 			}
 
@@ -134,6 +183,7 @@ func activateHandler(c *gin.Context) {
 				md,
 			)
 			if ret != codes.OK {
+				logmgr.RERROR("call GetAdminOfWithContext error:(%d,%v)\n", ret, err)
 				panic(err)
 			}
 
@@ -143,7 +193,9 @@ func activateHandler(c *gin.Context) {
 			} else if len(workerList.Teams) != 0 {
 				destination = &url.URL{Host: "myaccount." + environment.GetCurrEnv().ExternalApex, Scheme: "http"}
 			} else {
-				destination = &url.URL{Host: "www." + environment.GetCurrEnv().ExternalApex, Path: newCompanyPath, Scheme: "http"}
+				//TODO
+				//destination = &url.URL{Host: "www." + environment.GetCurrEnv().ExternalApex, Path: newCompanyPath, Scheme: "http"}
+				destination = &url.URL{Host: environment.GetCurrEnv().ExternalApex + ":9001", Path: newCompanyPath, Scheme: "http"}
 			}
 			c.Redirect(http.StatusFound, destination.String())
 		}

@@ -16,6 +16,7 @@ func main() {
 	cfg := tars.GetServerConfig()
 
 	//Init managers
+	tars.AddConfig("environment.conf")
 	tars.AddConfig("accountserver.conf")
 	configmgr.InitConfig(cfg.BasePath + "accountserver.conf")
 

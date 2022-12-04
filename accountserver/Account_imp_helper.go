@@ -29,7 +29,7 @@ func (imp *AccountImp) sendActiveEmail(accountDAO *models.Account) error {
 
 	//generate a activate token
 	logmgr.RINFO("Begin generate active token\n")
-	token, err := crypto.EmailConfirmationToken(accountDAO.ID, accountDAO.Email, imp.config.SigningToken)
+	token, err := crypto.EmailConfirmationToken(accountDAO.ID, accountDAO.Email, environment.GetCurrEnv().JWTTokenSecret)
 	if err != nil {
 		logmgr.RERROR("Gnetate active token error:(%v)\n", err)
 		return err
@@ -67,4 +67,8 @@ func (imp *AccountImp) sendActiveEmail(accountDAO *models.Account) error {
 	// }
 
 	return nil
+}
+
+func (imp *AccountImp) sendSmsGreeting(phonenumber string) {
+	//TODO
 }
