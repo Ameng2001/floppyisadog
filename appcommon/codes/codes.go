@@ -66,6 +66,7 @@ var (
 	//errors for account
 	ErrUpdateAccountError = errors.New("update account error")
 	ErrInternal           = errors.New("internal error")
+	ErrIncorrectPwd       = errors.New("incorrect password")
 )
 
 // define inner errors to standard http error codes

@@ -349,7 +349,7 @@ func (imp *AccountImp) UpdatePassword(ctx context.Context, req *accountserver.Up
 	}
 
 	// Run the update . . .
-	if ok := repos.UpdateAccountFields(req.Uuid, map[string]interface{}{"password_hash": pwHash}); !ok {
+	if ok := repos.UpdateAccountFields(req.Uuid, map[string]interface{}{"password_hash": pwHash, "password_salt": salt}); !ok {
 		logmgr.RERROR("Failed to read the database.\n")
 		return codes.Unknown, codes.ErrUpdateAccountError
 	}
@@ -359,40 +359,83 @@ func (imp *AccountImp) UpdatePassword(ctx context.Context, req *accountserver.Up
 func (imp *AccountImp) RequestPasswordReset(ctx context.Context, req *accountserver.PasswordResetRequest) (int32, error) {
 	//Doing something in your function
 	//TODO
-	return 0, nil
+	return codes.OK, nil
 }
 func (imp *AccountImp) RequestEmailChange(ctx context.Context, req *accountserver.EmailChangeRequest) (int32, error) {
 	//Doing something in your function
 	//TODO
-	return 0, nil
+	return codes.OK, nil
 }
 func (imp *AccountImp) VerifyPassword(ctx context.Context, req *accountserver.VerifyPasswordRequest, rsp *accountserver.AccountInfo) (int32, error) {
-	//Doing something in your function
-	//TODO
-	return 0, nil
+	_, authz, err := helpers.GetAuth(ctx)
+	if err != nil {
+		logmgr.RERROR("verifypassword:can not get authz\n")
+		return codes.Unknown, codes.ErrAuthorizedFailed
+	}
+	switch authz {
+	case consts.AuthorizationWWWService:
+	case consts.AuthorizationSupportUser:
+	default:
+		return codes.PermissionDenied, codes.ErrPermissionDenied
+	}
+
+	req.Email = strings.TrimSpace(strings.ToLower(req.Email))
+	accountDAO, nofound := repos.FindAccountByEmail(req.Email)
+	if nofound {
+		logmgr.RERROR("cannot get account by uuid\n")
+		return codes.NotFound, codes.ErrAccountNotFound
+	}
+
+	if !accountDAO.ConfirmAndActive {
+		logmgr.RERROR("This user has not confirmed their account\n")
+		return codes.PermissionDenied, codes.ErrPermissionDenied
+	}
+	if len(accountDAO.PasswordHash) == 0 {
+		logmgr.RERROR("This user has not set up their password\n")
+		return codes.PermissionDenied, codes.ErrPermissionDenied
+	}
+
+	if crypto.CheckPasswordHash([]byte(accountDAO.PasswordHash), []byte(accountDAO.PasswordSalt), []byte(req.Password)) != nil {
+		logmgr.RERROR("Password incorrect\n")
+		return codes.Unauthenticated, codes.ErrIncorrectPwd
+	}
+
+	rsp.Uuid = accountDAO.ID
+	rsp.Name = accountDAO.Name
+	rsp.Email = accountDAO.Email
+	rsp.Confirmed_and_active = accountDAO.ConfirmAndActive
+	rsp.Member_since = accountserver.Timestamp{
+		Seconds: int64(accountDAO.MemberSince.Second()),
+		Nanos:   int32(accountDAO.MemberSince.Nanosecond()),
+	}
+	rsp.Support = accountDAO.Support
+	rsp.Phonenumber = accountDAO.PhoneNumber
+	rsp.Photo_url = accountDAO.PhotoUrl
+
+	return codes.OK, nil
 }
 func (imp *AccountImp) ChangeEmail(ctx context.Context, req *accountserver.EmailConfirmation) (int32, error) {
 	//Doing something in your function
 	//TODO
-	return 0, nil
+	return codes.OK, nil
 }
 func (imp *AccountImp) GetOrCreate(ctx context.Context, req *accountserver.GetOrCreateRequest, rsp *accountserver.AccountInfo) (int32, error) {
 	//Doing something in your function
 	//TODO
-	return 0, nil
+	return codes.OK, nil
 }
 func (imp *AccountImp) GetAccountByPhonenumber(ctx context.Context, req *accountserver.GetAccountByPhonenumberRequest, rsp *accountserver.AccountInfo) (int32, error) {
 	//Doing something in your function
 	//TODO
-	return 0, nil
+	return codes.OK, nil
 }
 func (imp *AccountImp) TrackEvent(ctx context.Context, req *accountserver.TrackEventRequest) (int32, error) {
 	//Doing something in your function
 	//TODO
-	return 0, nil
+	return codes.OK, nil
 }
 func (imp *AccountImp) SyncUser(ctx context.Context, req *accountserver.SyncUserRequest) (int32, error) {
 	//Doing something in your function
 	//TODO
-	return 0, nil
+	return codes.OK, nil
 }

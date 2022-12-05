@@ -27,6 +27,9 @@ func main() {
 	//CSRF middleware
 	middleware.InitCSRF(r, environment.GetCurrEnv().CSRFTokenSecret)
 
+	//Authenticate middleware
+	r.Use(middleware.AuthSessionMiddleware())
+
 	//load assets and templates
 	errorpages.InitAssets()
 	assetsmgr.LoadAssets()

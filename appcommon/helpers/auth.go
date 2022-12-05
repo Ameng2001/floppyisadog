@@ -83,6 +83,7 @@ func Logout(res http.ResponseWriter, domain string) {
 	http.SetCookie(res, cookie)
 }
 
+// TODO 需要按照tars的鉴权传递改进
 // GetCurrentUserUUIDFromMetadata allows backend gRPC services with
 // authorization methods of AuthenticatedUser or SupportUser to access
 // the uuid of the user making the request

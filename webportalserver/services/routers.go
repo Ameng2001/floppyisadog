@@ -19,6 +19,7 @@ func RegisteRoutes(router *gin.RouterGroup) {
 	router.POST("/activate/:token", activatePostHandler)
 	router.GET("/reset/:token", confirmResetHandler)
 	router.GET(loginPath, loginHandler)
+	router.POST(loginPath, loginHandler)
 	router.GET("/logout/", logoutHandler)
 	router.GET(newCompanyPath, newCompanyHandler)
 	router.GET("/breaktime/", breaktimeListHandler)

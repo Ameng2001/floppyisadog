@@ -21,6 +21,7 @@ type Account struct {
 	ConfirmAndActive bool      `sql:"default:false"`
 	MemberSince      time.Time `sql:"not null;DEFAULT:current_timestamp"`
 	PasswordHash     string    `sql:"type:varchar(100)"`
+	PasswordSalt     string    `sql:"type:binary(60);not null;default:''"`
 	PhotoUrl         string    `sql:"type:varchar(255);not null"`
 	Support          bool      `sql:"not null;default:false"`
 }
