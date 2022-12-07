@@ -26,6 +26,9 @@
 		},
 		{
 			"path": "webportalserver"
+		},
+		{
+			"path": "frontend"
 		}
 	],
 	"settings": {}
