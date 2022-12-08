@@ -51,14 +51,14 @@ function fetchWhoAmI() {
   return (dispatch) => {
     dispatch(requestWhoAmI());
 
-    return fetch(routeToMicroservice('whoami', '/v1'), {
+    return fetch(routeToMicroservice('whoami', '/whoami/'), {
       credentials: 'include',
     })
       .then(checkStatus)
       .then(parseJSON)
-      .then(checkCode)
+      //.then(checkCode) 非tars服务断点，不用checkCode
       .then(data =>
-        dispatch(receiveWhoAmI(data.iam))
+        dispatch(receiveWhoAmI(data))
       );
   };
 }
@@ -89,12 +89,12 @@ export function fetchIntercomSettings() {
   return (dispatch) => {
     dispatch(requestIntercomSettings());
 
-    return fetch(routeToMicroservice('whoami', '/v1/intercom'), {
+    return fetch(routeToMicroservice('whoami', '/intercom/'), {
       credentials: 'include',
     })
       .then(checkStatus)
       .then(parseJSON)
-      .then(checkCode)
-      .then(data => dispatch(receiveIntercomSettings(data.intercomSettings)));
+      //.then(checkCode)
+      .then(data => dispatch(receiveIntercomSettings(data)));
   };
 }

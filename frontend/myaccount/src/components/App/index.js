@@ -17,6 +17,7 @@ import { routeToMicroservice } from '../../utility';
 class App extends React.Component {
 
   componentDidMount() {
+    //解构赋值
     const { dispatch } = this.props;
 
     dispatch(actions.initialize());
@@ -26,6 +27,7 @@ class App extends React.Component {
   }
 
   render() {
+    //解构赋值
     const {
       userData,
       isInitializing,

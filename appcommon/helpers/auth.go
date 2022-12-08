@@ -69,6 +69,17 @@ func GetSession(req *http.Request, signingSecret string) (uuid string, support b
 	return
 }
 
+func GetStoredJWT(req *http.Request) (jwt string) {
+	cookie, err := req.Cookie(consts.CookieName)
+	if err != nil {
+		jwt = ""
+		return
+	}
+
+	jwt = cookie.Value
+	return
+}
+
 // Logout forces an immediate logout of the current user.
 // For internal applications - typically do an HTTP redirect
 // to the www service `/logout/` route to trigger a logout.

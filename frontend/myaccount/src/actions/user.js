@@ -34,22 +34,30 @@ function updatedPassword() {
 }
 
 function updatePassword(userId, password) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(updatingPassword());
+
+    //tars json调用参数，与tars接口定义一致
+    const req = {
+      req: {
+        uuid: userId,
+        password: password,
+      }
+    }
 
     return fetch(routeToMicroservice(
       'account',
-      '/v1/account/update_password'
+      //json固定；account为accountserver别名；UpdatePassword同rpc方法名，统一用POST方法
+      '/json/account/UpdatePassword'
     ), {
       credentials: 'include',
-      method: 'PUT',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        //携带X-Token用于网关鉴权
+        'X-Token': getState().whoami.data.token,
       },
-      body: JSON.stringify({
-        userId,
-        password,
-      }),
+      body: JSON.stringify(req),
     })
       .then(checkStatus)
       .then(parseJSON)
@@ -73,7 +81,7 @@ function updatePassword(userId, password) {
 export function changePassword(newPassword) {
   return (dispatch, getState) =>
     dispatch(updatePassword(
-      getState().whoami.data.userId,
+      getState().whoami.data.user_uuid,
       newPassword
     ));
 }
@@ -136,6 +144,10 @@ function updateUser(userId, data) {
     const userData = getState().user.data;
     const originalEmail = userData.email;
     let successMessage = 'Success!';
+    //tars json调用参数，与tars接口定义一致
+    const updateReq = {
+      req: _.extend({}, userData, data)
+    }
 
     if (data.email !== originalEmail) {
       successMessage += ' Check your email for a confirmation link.';
@@ -143,13 +155,15 @@ function updateUser(userId, data) {
 
     dispatch(updatingUser({ data }));
 
-    return fetch(routeToMicroservice('account', '/v1/account/update'), {
+    return fetch(routeToMicroservice('account', '/json/account/Update'), {
       credentials: 'include',
-      method: 'PUT',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        //携带X-Token用于网关鉴权
+        'X-Token': getState().whoami.data.token,
       },
-      body: JSON.stringify(_.extend({}, userData, data)),
+      body: JSON.stringify(updateReq),
     })
       .then(checkStatus)
       .then(parseJSON)
@@ -187,20 +201,35 @@ function receiveUser(data) {
 }
 
 function fetchUser(userId) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     // dispatch action to start the fetch
     dispatch(requestUser());
 
+    //tars json调用参数，与tars接口定义一致
+    const getReq = {
+      req: {
+        uuid: userId,
+      }
+    }
+
     // eslint-disable-next-line max-len
-    return fetch(routeToMicroservice('account', `/v1/account/get?userId=${userId}`), {
+    return fetch(routeToMicroservice('account', `/json/account/Get`), {
       credentials: 'include',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        //携带X-Token用于网关鉴权
+        'X-Token': getState().whoami.data.token,
+      },
+      body: JSON.stringify(getReq),
     })
       .then(checkStatus)
       .then(parseJSON)
       .then(checkCode)
       .then(data =>
         dispatch(receiveUser({
-          data: data.account,
+          //tars接口的返回格式，rsp为AccountInfo结构
+          data: data.rsp,
           lastUpdate: Date.now(),
         }))
       );
@@ -248,9 +277,10 @@ export function getUser(userId) {
 }
 
 export function initialize() {
+  //利用redux-thunk中间件，dispatch action creater，将dispatch和getState作为参数传入
   return (dispatch, getState) => {
     dispatch(getWhoAmI()).then(() => {
-      const userId = getState().whoami.data.userId;
+      const userId = getState().whoami.data.user_uuid;
 
       return dispatch(getUser(userId));
     });
@@ -260,7 +290,7 @@ export function initialize() {
 export function changeAccountData(email, name, phoneNumber) {
   // make API call to save the submitted changes
   return (dispatch, getState) =>
-    dispatch(updateUser(getState().whoami.data.userId, {
+    dispatch(updateUser(getState().whoami.data.user_uuid, {
       email,
       name,
       phoneNumber,
@@ -280,6 +310,6 @@ export function modifyUserAttribute(event) {
   }
 
   return (dispatch, getState) => {
-    dispatch(updateUser(getState().whoami.data.userId, payload));
+    dispatch(updateUser(getState().whoami.data.user_uuid, payload));
   };
 }

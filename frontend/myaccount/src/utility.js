@@ -1,4 +1,4 @@
-import { MILISECONDS_TO_SECONDS } from './constants/constants';
+import { MILISECONDS_TO_SECONDS, TARS_RET_OK } from './constants/constants';
 import {
   ENV_NAME_DEVELOPMENT,
   ENV_NAME_UAT,
@@ -68,11 +68,11 @@ export function checkStatus(response) {
 }
 
 export function checkCode(data) {
-  if (data.code === 'SUCCESS') {
+  if (data.tars_ret === TARS_RET_OK) {
     return data;
   }
 
-  const error = new Error(data.message);
+  const error = new Error(data.tars_ret);
   error.data = data;
   throw error;
 }

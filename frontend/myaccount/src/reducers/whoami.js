@@ -1,6 +1,15 @@
 import _ from 'lodash';
 import * as actionTypes from '../constants/actionTypes';
 
+/* data格式
+type IAm struct {
+	Support  bool                        `json:"support"`
+	UserUUID string                      `json:"user_uuid"`
+	Token    string                      `json:"token"`
+	Worker   *companyserver.WorkerOfList `json:"worker"`
+	Admin    *companyserver.AdminOfList  `json:"admin"`
+}
+*/
 const initialState = {
   isFetching: false,
   didInvalidate: false,
