@@ -25,7 +25,10 @@ func RegisteRoutes(router *gin.RouterGroup) {
 	router.GET("/breaktime/", breaktimeListHandler)
 	router.GET("/breaktime/:slug", breaktimeEpisodeHandler)
 	router.GET(passwordResetPath, resetHandler)
+
+	//注册两个api端点
 	router.GET("/whoami/", whoamiHandler)
+	router.GET("/intercom/", intercomHandler)
 
 	for route, info := range configmgr.GetConfig().Pages.StaticPages {
 		router.GET(route, info.Handler)

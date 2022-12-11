@@ -17,6 +17,10 @@ export const DEVELOPMENT_APEX = '.staffjoy-v2.local';
 export const UAT_APEX = '.staffjoy-uat.local';
 export const PRODUCTION_APEX = '.staffjoy.com';
 
+// 通过网关透传到rpc服务的headkey
+export const CURRENT_USER_HEADER = "X-Verify-UID"
+export const AUTHORIZATION_HEADER = "X-Verify-Data"
+
 const DEFAULT_REFETCH_INTERVAL = 10;
 
 const REFETCH_INTERVALS = {

@@ -55,7 +55,10 @@ function updatePassword(userId, password) {
       headers: {
         'Content-Type': 'application/json',
         //携带X-Token用于网关鉴权
-        'X-Token': getState().whoami.data.token,
+        //'X-Token': getState().whoami.data.token,
+        //whoami相当于鉴权，透传uuid和身份信息authz
+        'X-Verify-UID': getState.whoami.data.user_uuid,
+        'X-Verify-Data': getState.whoami.data.authz,
       },
       body: JSON.stringify(req),
     })
@@ -161,7 +164,10 @@ function updateUser(userId, data) {
       headers: {
         'Content-Type': 'application/json',
         //携带X-Token用于网关鉴权
-        'X-Token': getState().whoami.data.token,
+        //'X-Token': getState().whoami.data.token,
+        //whoami相当于鉴权，透传uuid和身份信息authz
+        'X-Verify-UID': getState.whoami.data.user_uuid,
+        'X-Verify-Data': getState.whoami.data.authz,
       },
       body: JSON.stringify(updateReq),
     })
@@ -219,7 +225,10 @@ function fetchUser(userId) {
       headers: {
         'Content-Type': 'application/json',
         //携带X-Token用于网关鉴权
-        'X-Token': getState().whoami.data.token,
+        //'X-Token': getState().whoami.data.token,
+        //whoami相当于鉴权，透传uuid和身份信息authz
+        'X-Verify-UID': getState.whoami.data.user_uuid,
+        'X-Verify-Data': getState.whoami.data.authz,
       },
       body: JSON.stringify(getReq),
     })

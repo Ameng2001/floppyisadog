@@ -7,14 +7,16 @@ import (
 )
 
 type Environment struct {
-	Name            string
-	IsDebug         bool
-	ExternalApex    string // Apex domain off of which services operate externally
-	InternalApex    string // Apex domain off of which services operate internally
-	LogLevel        string // Verbosity of logging
-	Scheme          string // default URL scheme - http or https
-	JWTTokenSecret  string // secret for generating JWT token
-	CSRFTokenSecret string // secret for generating CSRF token
+	Name               string
+	IsDebug            bool
+	ExternalApex       string // Apex domain off of which services operate externally
+	InternalApex       string // Apex domain off of which services operate internally
+	LogLevel           string // Verbosity of logging
+	Scheme             string // default URL scheme - http or https
+	JWTTokenSecret     string // secret for generating JWT token
+	CSRFTokenSecret    string // secret for generating CSRF token
+	IntercomAppId      string // intercom app id
+	IntercomSignSecret string // intercom signsecret
 }
 
 var (
@@ -29,14 +31,16 @@ func InitEnvironment(c *conf.Conf, domain string) bool {
 	envs = make(map[string]*Environment)
 	for _, env := range subdomains {
 		envInfo := &Environment{
-			Name:            c.GetString(domain + env + "<Name>"),
-			IsDebug:         c.GetBoolWithDef(domain+env+"<IsDebug>", false),
-			ExternalApex:    c.GetString(domain + env + "<ExternalApex>"),
-			InternalApex:    c.GetString(domain + env + "<InternalApex>"),
-			LogLevel:        c.GetString(domain + env + "<LogLevel>"),
-			Scheme:          c.GetString(domain + env + "<Scheme>"),
-			JWTTokenSecret:  c.GetString(domain + env + "<JWTTokenSecret>"),
-			CSRFTokenSecret: c.GetString(domain + env + "<CSRFTokenSecret>"),
+			Name:               c.GetString(domain + env + "<Name>"),
+			IsDebug:            c.GetBoolWithDef(domain+env+"<IsDebug>", false),
+			ExternalApex:       c.GetString(domain + env + "<ExternalApex>"),
+			InternalApex:       c.GetString(domain + env + "<InternalApex>"),
+			LogLevel:           c.GetString(domain + env + "<LogLevel>"),
+			Scheme:             c.GetString(domain + env + "<Scheme>"),
+			JWTTokenSecret:     c.GetString(domain + env + "<JWTTokenSecret>"),
+			CSRFTokenSecret:    c.GetString(domain + env + "<CSRFTokenSecret>"),
+			IntercomAppId:      c.GetString(domain + env + "<IntercomAppId>"),
+			IntercomSignSecret: c.GetString(domain + env + "<IntercomSignSecret>"),
 		}
 		envs[env] = envInfo
 		fmt.Printf("Envirionment (%s) : (%v)\n", env, envInfo)

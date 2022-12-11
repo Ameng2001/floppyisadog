@@ -21,8 +21,8 @@ import (
 
 func loginHandler(c *gin.Context) {
 	// if logged in - go away
-	// TODO 如何在网关统一设置http鉴权的头（写一个middleware，通过session来记录鉴权）
-	if c.GetHeader(consts.AuthorizationHeader) == consts.AuthorizationAuthenticatedUser {
+	authz := helpers.GetAuthFromHeader(c)
+	if authz == consts.AuthorizationAuthenticatedUser {
 		destination := &url.URL{Host: "myaccount." + environment.GetCurrEnv().ExternalApex, Scheme: "http"}
 		c.Redirect(http.StatusFound, destination.String())
 		return

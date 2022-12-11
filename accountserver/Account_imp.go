@@ -60,7 +60,7 @@ func (imp *AccountImp) Destroy() {
 }
 
 func (imp *AccountImp) Create(ctx context.Context, req *accountserver.CreateAccountRequest, rsp *accountserver.AccountInfo) (int32, error) {
-	_, authz, err := helpers.GetAuth(ctx)
+	_, authz, err := helpers.GetAuthFromMetadata(ctx)
 	if err != nil {
 		return codes.Unknown, codes.ErrAuthorizedFailed
 	}
@@ -151,7 +151,7 @@ func (imp *AccountImp) List(ctx context.Context, req *accountserver.GetAccountLi
 	return 0, nil
 }
 func (imp *AccountImp) Get(ctx context.Context, req *accountserver.GetAccountRequest, rsp *accountserver.AccountInfo) (int32, error) {
-	_, authz, err := helpers.GetAuth(ctx)
+	_, authz, err := helpers.GetAuthFromMetadata(ctx)
 	if err != nil {
 		return codes.Unknown, codes.ErrAuthorizedFailed
 	}
@@ -205,7 +205,7 @@ func (imp *AccountImp) Get(ctx context.Context, req *accountserver.GetAccountReq
 	return codes.OK, nil
 }
 func (imp *AccountImp) Update(ctx context.Context, req *accountserver.AccountInfo) (int32, error) {
-	_, authz, err := helpers.GetAuth(ctx)
+	_, authz, err := helpers.GetAuthFromMetadata(ctx)
 	if err != nil {
 		logmgr.RERROR("can not get authz\n")
 		return codes.Unknown, codes.ErrAuthorizedFailed
@@ -307,7 +307,7 @@ func (imp *AccountImp) Update(ctx context.Context, req *accountserver.AccountInf
 	return codes.OK, nil
 }
 func (imp *AccountImp) UpdatePassword(ctx context.Context, req *accountserver.UpdatePasswordRequest) (int32, error) {
-	_, authz, err := helpers.GetAuth(ctx)
+	_, authz, err := helpers.GetAuthFromMetadata(ctx)
 	if err != nil {
 		logmgr.RERROR("can not get authz\n")
 		return codes.Unknown, codes.ErrAuthorizedFailed
@@ -367,7 +367,7 @@ func (imp *AccountImp) RequestEmailChange(ctx context.Context, req *accountserve
 	return codes.OK, nil
 }
 func (imp *AccountImp) VerifyPassword(ctx context.Context, req *accountserver.VerifyPasswordRequest, rsp *accountserver.AccountInfo) (int32, error) {
-	_, authz, err := helpers.GetAuth(ctx)
+	_, authz, err := helpers.GetAuthFromMetadata(ctx)
 	if err != nil {
 		logmgr.RERROR("verifypassword:can not get authz\n")
 		return codes.Unknown, codes.ErrAuthorizedFailed

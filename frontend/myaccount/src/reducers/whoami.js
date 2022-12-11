@@ -5,7 +5,8 @@ import * as actionTypes from '../constants/actionTypes';
 type IAm struct {
 	Support  bool                        `json:"support"`
 	UserUUID string                      `json:"user_uuid"`
-	Token    string                      `json:"token"`
+	//Token    string                      `json:"token"`
+  Authz    string                      `json:"authz"`
 	Worker   *companyserver.WorkerOfList `json:"worker"`
 	Admin    *companyserver.AdminOfList  `json:"admin"`
 }

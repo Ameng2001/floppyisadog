@@ -10,27 +10,13 @@ import (
 	"github.com/floppyisadog/appcommon/codes"
 	"github.com/floppyisadog/appcommon/consts"
 	"github.com/floppyisadog/appcommon/utils/crypto"
+	"github.com/gin-gonic/gin"
 )
 
 var (
 	shortSession = time.Duration(12 * time.Hour)
 	longSession  = time.Duration(30 * 24 * time.Hour)
 )
-
-// authorization
-func GetAuth(ctx context.Context) (map[string]string, string, error) {
-	metadata, ok := current.GetRequestContext(ctx)
-	if !ok {
-		return nil, "", codes.ErrRequestContextMissing
-	}
-
-	authz := metadata[consts.AuthorizationMetadata]
-	if len(authz) == 0 {
-		return nil, "", codes.ErrRequestAuthrizationMetaMissing
-	}
-
-	return metadata, authz, nil
-}
 
 // authentication
 // LoginUser sets a cookie to log in a user
@@ -94,7 +80,26 @@ func Logout(res http.ResponseWriter, domain string) {
 	http.SetCookie(res, cookie)
 }
 
-// TODO 需要按照tars的鉴权传递改进
+// 从tars context中获取身份信息
+func GetAuthFromMetadata(ctx context.Context) (map[string]string, string, error) {
+	metadata, ok := current.GetRequestContext(ctx)
+	if !ok {
+		return nil, "", codes.ErrRequestContextMissing
+	}
+
+	authz := metadata[consts.AuthorizationMetadata]
+	if len(authz) == 0 {
+		return nil, "", codes.ErrRequestAuthrizationMetaMissing
+	}
+
+	return metadata, authz, nil
+}
+
+// 从http header中获取身份信息
+func GetAuthFromHeader(c *gin.Context) string {
+	return c.GetHeader(consts.AuthorizationHeader)
+}
+
 // GetCurrentUserUUIDFromMetadata allows backend gRPC services with
 // authorization methods of AuthenticatedUser or SupportUser to access
 // the uuid of the user making the request

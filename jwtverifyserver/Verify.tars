@@ -1,0 +1,30 @@
+module jwtverifyserver
+{
+	enum E_VERIFY_CODE
+    {
+        EVC_TOKEN_EXPIRE    = -3,           // token过期
+        EVC_ERR_TOKEN = -2,                 // token格式错误等
+        EVC_SYS_ERR = -1,                   // 系统异常
+        EVC_SUCC = 0                        // 成功
+    };
+
+    struct VeifyReq
+    {
+        1 require   string                  token;          // token，在配置中指定的http头中获取，比如X-Token
+        2 optional  map<string, string>     verifyHeaders;  // 请求网关时的 http 头, 具体需要透传哪些http头在配置中指定verify_headers
+        3 optional  vector<byte>            body;           // 请求body，如果需要业务请求的body，那么配置中指定 verify_body=true
+    };
+
+    struct VeifyRsp
+    {
+        1 require   int     ret;        // 返回码， 取值为 E_VERIFY_CODE
+        2 optional  string  uid;        // 认证成功后的 uid
+        3 optional  string  context;    // 认证服务认证成功后可能需要的附件数据透传给业务， 后面调用服务时通过 context["X-Verify-Data"] 透传
+    };
+
+    interface Verify
+    {
+        // 鉴权接口
+        int Verify(VeifyReq req, out VeifyRsp rsp);
+    };
+};

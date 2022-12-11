@@ -62,8 +62,8 @@ class App extends React.Component {
     return (
       <div className="mdl-grid" id="myaccount">
         <div className="mdl-cell mdl-cell--4-col">
-          <ProfilePhoto photoUrl={userData.photoUrl} />
-          <StatsPanel memberSince={userData.memberSince} />
+          <ProfilePhoto photoUrl={userData.photo_url} />
+          <StatsPanel memberSince={userData.member_since.seconds} />
           <ul className="button-nav">
             {appButton}
             <li>
@@ -82,7 +82,7 @@ class App extends React.Component {
           <AccountUpdate
             name={userData.name}
             email={userData.email}
-            phoneNumber={userData.phoneNumber}
+            phoneNumber={userData.phonenumber}
             formData={formData.accountUpdate}
           />
           <PasswordUpdate formData={formData.passwordUpdate} />
@@ -98,7 +98,7 @@ class App extends React.Component {
         &&
         <Intercom
           {...intercomSettings}
-          appID={intercomSettings.appId}
+          appID={intercomSettings.app_id}
         />}
       </div>
     );
