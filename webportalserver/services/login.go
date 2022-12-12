@@ -78,14 +78,16 @@ func loginHandler(c *gin.Context) {
 			}
 
 			if returnTo == "" {
-				destination := &url.URL{Host: "app." + environment.GetCurrEnv().ExternalApex, Scheme: scheme}
+				//TODO 调试，先默认进入myaccount，且端口为8080
+				//destination := &url.URL{Host: "app." + environment.GetCurrEnv().ExternalApex, Scheme: scheme}
+				destination := &url.URL{Host: "myaccount." + environment.GetCurrEnv().ExternalApex + ":8080", Scheme: scheme}
 				returnTo = destination.String()
 			} else {
 				returnTo = "http://" + returnTo
 
 				// sanitize
 				if !isValidSub(returnTo) {
-					destination := &url.URL{Host: "myaccount." + environment.GetCurrEnv().ExternalApex, Scheme: scheme}
+					destination := &url.URL{Host: "myaccount." + environment.GetCurrEnv().ExternalApex + ":8080", Scheme: scheme}
 					returnTo = destination.String()
 				}
 

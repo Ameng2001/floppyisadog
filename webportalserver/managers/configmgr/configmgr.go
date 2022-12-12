@@ -100,6 +100,17 @@ func InitConfig(configFile string) {
 			Version:      ConfigInstance.Pages.Version,
 		}
 
+		pageInfo = c.GetMap("/floppyisadog/webportalserver/pages/login")
+		ConfigInstance.Pages.LoginPage = &pages.LoginPage{
+			Page: pages.Page{
+				Title:        pageInfo["Title"],
+				Description:  pageInfo["Description"],
+				TemplateName: pageInfo["TemplateName"],
+				CSSId:        pageInfo["CSSId"],
+				Version:      ConfigInstance.Pages.Version,
+			},
+		}
+
 		pageInfo = c.GetMap("/floppyisadog/webportalserver/pages/activate")
 		ConfigInstance.Pages.ActivatePage = &pages.ActivatePage{
 			Page: pages.Page{

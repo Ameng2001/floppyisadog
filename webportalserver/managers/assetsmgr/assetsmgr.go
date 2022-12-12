@@ -40,12 +40,12 @@ func LoadAssets() bool {
 	initAllTemplates()
 	loadBreaktime()
 
-	jsBox = rice.MustFindBox("assets/js")
-	cssBox = rice.MustFindBox("assets/css")
-	imagesBox = rice.MustFindBox("assets/images")
-	dataBox = rice.MustFindBox("assets/data")
-	fontBox = rice.MustFindBox("assets/fonts")
-	breakTimeCoverBox = rice.MustFindBox("assets/breaktime-cover")
+	jsBox = rice.MustFindBox("../../assets/js")
+	cssBox = rice.MustFindBox("../../assets/css")
+	imagesBox = rice.MustFindBox("../../assets/images")
+	dataBox = rice.MustFindBox("../../assets/data")
+	fontBox = rice.MustFindBox("../../assets/fonts")
+	breakTimeCoverBox = rice.MustFindBox("../../assets/breaktime-cover")
 
 	return true
 }
@@ -93,7 +93,7 @@ func hasField(v interface{}, name string) bool {
 
 // initializes templateHolder
 func initAllTemplates() {
-	templatesBox = rice.MustFindBox("assets/templates")
+	templatesBox = rice.MustFindBox("../../assets/templates")
 	template.New("HTMLTemplates")
 	templatesBox.Walk("", func(path string, i os.FileInfo, e error) error {
 		if i.IsDir() {
@@ -121,7 +121,7 @@ func initAllTemplates() {
 }
 
 func loadBreaktime() {
-	breaktimeContentBox = rice.MustFindBox("assets/breaktime-content")
+	breaktimeContentBox = rice.MustFindBox("../../assets/breaktime-content")
 	template.New("BreaktimeContent")
 	breaktimeContentBox.Walk("", func(path string, i os.FileInfo, e error) error {
 		if i.IsDir() {

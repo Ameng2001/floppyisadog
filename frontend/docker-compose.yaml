@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  myaccount-service:
+    build:
+      context: ./
+      dockerfile: myaccount/Dockerfile
+    image: myaccount-spa:1.0
+  #  TODO
+  #  docker run -d \
+  #   --name=myaccount-spa \
+  #   --platform linux/amd64 \
+  #   --net=tars \
+  #   --ip="172.25.0.8" \
+  #   -p 8080:80 \
+  #   myaccount-spa:1.0
+    
+  # app-service:
+  #   build:
+  #     context: ./
+  #     dockerfile: app/Dockerfile
+  #   image: app-spa:1.0
+    

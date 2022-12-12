@@ -6,9 +6,9 @@ COPY third_party ./third_party
 
 WORKDIR '/build/myaccount'
 
-RUN yarn install
+#RUN yarn install
 #RUN npm rebuild node-sass
-RUN yarn run build
+#RUN yarn run build
 
 RUN ls /build/myaccount/dist
 

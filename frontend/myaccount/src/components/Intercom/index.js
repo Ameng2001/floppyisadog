@@ -6,8 +6,8 @@
 // Since the file is so small, we decided to copy & paste the code rather
 // than forking react-intercom.
 
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import React from 'react';
 const canUseDOM = !!(
   (typeof window !== 'undefined' &&
   window.document && window.document.createElement)
