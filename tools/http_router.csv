@@ -1,0 +1,7 @@
+f_id,f_station_id,f_server_name,f_path_rule,f_proxy_pass,f_valid,f_update_person,f_update_time
+1,webportal,portal.staffjoy.com,/,http://Base.GatewayServer.FlowControlObj,1,admin,"2022-11-28 05:37:12"
+2,floppyisadog_webportal,staffjoy-v2.local,/,http://floppyisadog.webportalserver.HttpObj,1,admin,"2022-11-29 06:40:18"
+3,floppyisadog_myaccountspa,myaccount.staffjoy-v2.local,/,http://172.25.0.8:80,1,admin,"2022-12-12 06:59:43"
+4,floppyisadog_webportal,www.staffjoy-v2.local,/,http://floppyisadog.webportalserver.HttpObj,1,admin,"2022-12-12 07:01:02"
+5,floppyisadog_webportal,whoami.staffjoy-v2.local,/,http://floppyisadog.webportalserver.HttpObj,1,admin,"2022-12-12 07:01:51"
+6,floppyisadog_appspa,app.staffjoy-v2.local,/,http://172.25.0.9:80,1,admin,"2022-12-12 07:03:29"
