@@ -1,0 +1,103 @@
+version: '3.7'
+services:
+  mysql:
+    image: mysql:5.6
+    container_name: tars-mysql
+    ports:
+      - "3306:3306"
+    restart: always
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+    volumes:
+      - ~/framework-mysql:/var/lib/mysql:rw
+      #- ./source/Shanghai:/etc/localtime
+    networks:
+      internal:
+        ipv4_address: 172.25.0.2
+
+  framework:
+    image: tarscloud/framework:v3.0.15
+    container_name: tars-framework
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    restart: always
+    platform: linux/amd64
+    networks:
+      internal:
+        ipv4_address: 172.25.0.3
+    environment:
+      MYSQL_HOST: "172.25.0.2"
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_USER: "root"
+      MYSQL_PORT: 3306
+      REBUILD: "false"
+      INET: eth0
+      SLAVE: "false"
+    volumes:
+      - ~/framework:/data/tars:rw
+      #- ./source/Shanghai:/etc/localtime
+    depends_on:
+      - mysql
+
+  node:
+    image: tarscloud/tars-node:latest
+    container_name: tars-node
+    restart: always
+    platform: linux/amd64
+    networks:
+      internal:
+        ipv4_address: 172.25.0.5
+    volumes:
+      - ~/tars:/data/tars:rw
+      #- ./source/Shanghai:/etc/localtime
+    environment:
+      INET: eth0
+      WEB_HOST: http://172.25.0.3:3000
+    ports:
+      - "9000-9030:9000-9030"
+    depends_on:
+      - framework
+
+  myaccount-spa:
+    build:
+      context: ./frontend
+      dockerfile: myaccount/Dockerfile
+    image: myaccount-spa:1.0
+    container_name: myaccount-spa
+    restart: always
+    platform: linux/amd64
+    networks:
+      internal:
+        ipv4_address: 172.25.0.8
+    #ports:
+    #  - "8080:80"
+    depends_on:
+      - node
+    
+  app-service:
+    build:
+      context: ./frontend
+      dockerfile: app/Dockerfile
+    image: app-spa:1.0
+    container_name: app-spa
+    restart: always
+    platform: linux/amd64
+    networks:
+      internal:
+        ipv4_address: 172.25.0.9
+    #ports:
+    #  - "8081:80"
+    depends_on:
+      - node
+
+networks:
+  internal:
+    name: tars
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
+          gateway: 172.25.0.1
+    
