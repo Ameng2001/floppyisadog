@@ -9,6 +9,7 @@ import {
   HTTP_PREFIX,
   HTTPS_PREFIX,
   getRefetchInterval,
+  DEV_GATEWAY_PORT,
 } from './constants/config';
 
 export function emptyPromise(val = null) {
@@ -40,7 +41,7 @@ export function detectEnvironment() {
 }
 
 export function routeToMicroservice(service, path = '') {
-  const devRoute = `${HTTP_PREFIX}${service}${DEVELOPMENT_APEX}${path}`;
+  const devRoute = `${HTTP_PREFIX}${service}${DEVELOPMENT_APEX}${DEV_GATEWAY_PORT}${path}`;
 
   switch (detectEnvironment()) {
     case ENV_NAME_DEVELOPMENT:

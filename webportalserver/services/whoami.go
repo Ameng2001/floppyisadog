@@ -27,18 +27,18 @@ func whoamiHandler(c *gin.Context) {
 	code := http.StatusOK
 	var err error
 
-	authz := helpers.GetAuthFromHeader(c)
+	authz := helpers.GetAuthFromGinContext(c)
 	switch authz {
 	case consts.AuthorizationAnonymousWeb:
 		code = http.StatusForbidden
 	case consts.AuthorizationAuthenticatedUser:
-		rsp.UserUUID, err = helpers.GetCurrentUserUUIDFromHeader(c.Request.Header)
+		rsp.UserUUID, err = helpers.GetCurrentUserUUIDFromGinContext(c)
 		if err != nil {
 			panic(err)
 		}
 	case consts.AuthorizationSupportUser:
 		rsp.Support = true
-		rsp.UserUUID, err = helpers.GetCurrentUserUUIDFromHeader(c.Request.Header)
+		rsp.UserUUID, err = helpers.GetCurrentUserUUIDFromGinContext(c)
 		if err != nil {
 			panic(err)
 		}

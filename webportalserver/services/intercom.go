@@ -30,14 +30,14 @@ func intercomHandler(c *gin.Context) {
 	var err error
 
 	rsp.AppID = environment.GetCurrEnv().IntercomAppId
-	authz := helpers.GetAuthFromHeader(c)
+	authz := helpers.GetAuthFromGinContext(c)
 	switch authz {
 	case consts.AuthorizationAnonymousWeb:
 		code = http.StatusForbidden
 	case consts.AuthorizationSupportUser:
 		fallthrough
 	case consts.AuthorizationAuthenticatedUser:
-		rsp.UserUUID, err = helpers.GetCurrentUserUUIDFromHeader(c.Request.Header)
+		rsp.UserUUID, err = helpers.GetCurrentUserUUIDFromGinContext(c)
 		if err != nil {
 			panic(err)
 		}

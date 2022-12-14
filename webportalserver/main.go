@@ -29,6 +29,8 @@ func main() {
 
 	//Authenticate middleware
 	r.Use(middleware.AuthSessionMiddleware())
+	//Security middleware
+	r.Use(middleware.SecurityMiddleware())
 
 	//load assets and templates
 	errorpages.InitAssets()

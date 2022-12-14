@@ -153,6 +153,7 @@ func (imp *AccountImp) List(ctx context.Context, req *accountserver.GetAccountLi
 func (imp *AccountImp) Get(ctx context.Context, req *accountserver.GetAccountRequest, rsp *accountserver.AccountInfo) (int32, error) {
 	_, authz, err := helpers.GetAuthFromMetadata(ctx)
 	if err != nil {
+		logmgr.RERROR("Get auth from meta return nothing, check the request header")
 		return codes.Unknown, codes.ErrAuthorizedFailed
 	}
 	switch authz {

@@ -52,7 +52,7 @@ function fetchWhoAmI() {
     dispatch(requestWhoAmI());
 
     return fetch(routeToMicroservice('whoami', '/whoami/'), {
-      credentials: 'include',
+      credentials: 'include', //携带cookie用作鉴权
     })
       .then(checkStatus)
       .then(parseJSON)
@@ -90,7 +90,7 @@ export function fetchIntercomSettings() {
     dispatch(requestIntercomSettings());
 
     return fetch(routeToMicroservice('whoami', '/intercom/'), {
-      credentials: 'include',
+      credentials: 'include', //携带cookie用作鉴权
     })
       .then(checkStatus)
       .then(parseJSON)

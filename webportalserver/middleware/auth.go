@@ -17,9 +17,9 @@ func AuthSessionMiddleware() gin.HandlerFunc {
 			} else {
 				authorization = consts.AuthorizationAuthenticatedUser
 			}
-			ctx.Header(consts.CurrentUserHeader, uuid)
+			ctx.Set(consts.CurrentUserMetadata, uuid)
 		}
-		ctx.Header(consts.AuthorizationHeader, authorization)
+		ctx.Set(consts.AuthorizationMetadata, authorization)
 
 		ctx.Next()
 	}

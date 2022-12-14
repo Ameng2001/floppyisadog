@@ -96,8 +96,12 @@ func GetAuthFromMetadata(ctx context.Context) (map[string]string, string, error)
 }
 
 // 从http header中获取身份信息
-func GetAuthFromHeader(c *gin.Context) string {
-	return c.GetHeader(consts.AuthorizationHeader)
+// func GetAuthFromHeader(c *gin.Context) string {
+// 	return c.GetHeader(consts.AuthorizationHeader)
+// }
+
+func GetAuthFromGinContext(c *gin.Context) string {
+	return c.GetString(consts.AuthorizationMetadata)
 }
 
 // GetCurrentUserUUIDFromMetadata allows backend gRPC services with
@@ -120,12 +124,22 @@ func GetCurrentUserUUIDFromMetadata(c context.Context) (uuid string, err error) 
 // GetCurrentUserUUIDFromHeader allows backend http services with
 // authorization methods of AuthenticatedUser or SupportUser to access
 // the uuid of the user making the request
-func GetCurrentUserUUIDFromHeader(data http.Header) (uuid string, err error) {
-	res, ok := data[consts.CurrentUserHeader]
-	if !ok || len(res) == 0 {
+// func GetCurrentUserUUIDFromHeader(data http.Header) (uuid string, err error) {
+// 	res, ok := data[consts.CurrentUserHeader]
+// 	if !ok || len(res) == 0 {
+// 		err = fmt.Errorf("user not authenticated")
+// 		return
+// 	}
+// 	uuid = res[0]
+// 	return
+// }
+
+func GetCurrentUserUUIDFromGinContext(c *gin.Context) (uuid string, err error) {
+	res := c.GetString(consts.CurrentUserMetadata)
+	if res == "" {
 		err = fmt.Errorf("user not authenticated")
 		return
 	}
-	uuid = res[0]
+	uuid = res
 	return
 }

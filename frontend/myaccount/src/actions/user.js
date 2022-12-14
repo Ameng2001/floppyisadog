@@ -37,30 +37,28 @@ function updatePassword(userId, password) {
   return (dispatch, getState) => {
     dispatch(updatingPassword());
 
-    //tars json调用参数，与tars接口定义一致
-    const req = {
-      req: {
-        uuid: userId,
-        password: password,
-      }
-    }
-
     return fetch(routeToMicroservice(
       'account',
       //json固定；account为accountserver别名；UpdatePassword同rpc方法名，统一用POST方法
       '/json/account/UpdatePassword'
     ), {
-      credentials: 'include',
+      //credentials: 'include',
       method: 'POST',
+      mode:'cors',
       headers: {
         'Content-Type': 'application/json',
         //携带X-Token用于网关鉴权
         //'X-Token': getState().whoami.data.token,
-        //whoami相当于鉴权，透传uuid和身份信息authz
-        'X-Verify-UID': getState.whoami.data.user_uuid,
-        'X-Verify-Data': getState.whoami.data.authz,
+        //whoami相当于鉴权，透传uuid和身份信息authz(设置到request header中，在网关侧会将head透传到tars调用的context中)
+        'X-Verify-UID': getState().whoami.data.user_uuid,
+        'X-Verify-Data': getState().whoami.data.authz,
       },
-      body: JSON.stringify(req),
+      body: JSON.stringify({
+        req: {
+          uuid: userId,
+          password: password,
+        }
+      }),
     })
       .then(checkStatus)
       .then(parseJSON)
@@ -147,10 +145,6 @@ function updateUser(userId, data) {
     const userData = getState().user.data;
     const originalEmail = userData.email;
     let successMessage = 'Success!';
-    //tars json调用参数，与tars接口定义一致
-    const updateReq = {
-      req: _.extend({}, userData, data)
-    }
 
     if (data.email !== originalEmail) {
       successMessage += ' Check your email for a confirmation link.';
@@ -159,17 +153,20 @@ function updateUser(userId, data) {
     dispatch(updatingUser({ data }));
 
     return fetch(routeToMicroservice('account', '/json/account/Update'), {
-      credentials: 'include',
+      //credentials: 'include',
       method: 'POST',
+      mode:'cors',
       headers: {
         'Content-Type': 'application/json',
         //携带X-Token用于网关鉴权
         //'X-Token': getState().whoami.data.token,
-        //whoami相当于鉴权，透传uuid和身份信息authz
-        'X-Verify-UID': getState.whoami.data.user_uuid,
-        'X-Verify-Data': getState.whoami.data.authz,
+        //whoami相当于鉴权，透传uuid和身份信息authz(设置到request header中，在网关侧会将head透传到tars调用的context中)
+        'X-Verify-UID': getState().whoami.data.user_uuid,
+        'X-Verify-Data': getState().whoami.data.authz,
       },
-      body: JSON.stringify(updateReq),
+      body: JSON.stringify({
+        req: _.extend({}, userData, data)
+      }),
     })
       .then(checkStatus)
       .then(parseJSON)
@@ -212,25 +209,30 @@ function fetchUser(userId) {
     dispatch(requestUser());
 
     //tars json调用参数，与tars接口定义一致
-    const getReq = {
-      req: {
-        uuid: userId,
-      }
-    }
+    // const getReq = {
+    //   req: {
+    //     uuid: userId,
+    //   }
+    // };
 
     // eslint-disable-next-line max-len
-    return fetch(routeToMicroservice('account', `/json/account/Get`), {
-      credentials: 'include',
+    return fetch(routeToMicroservice('account', '/json/account/Get'), {
+      //credentials: 'include', //不需要携带cookie
       method: 'POST',
+      mode:'cors',
       headers: {
         'Content-Type': 'application/json',
         //携带X-Token用于网关鉴权
         //'X-Token': getState().whoami.data.token,
-        //whoami相当于鉴权，透传uuid和身份信息authz
-        'X-Verify-UID': getState.whoami.data.user_uuid,
-        'X-Verify-Data': getState.whoami.data.authz,
+        //whoami相当于鉴权，透传uuid和身份信息authz(设置到request header中，在网关侧会将head透传到tars调用的context中)
+        'X-Verify-UID': getState().whoami.data.user_uuid,
+        'X-Verify-Data': getState().whoami.data.authz,
       },
-      body: JSON.stringify(getReq),
+      body: JSON.stringify({
+        req: {
+          uuid: userId,
+        }
+      }),
     })
       .then(checkStatus)
       .then(parseJSON)
