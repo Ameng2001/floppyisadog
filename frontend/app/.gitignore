@@ -1,0 +1,9 @@
+node_modules/*
+npm-debug.log
+dist/index.html
+dist/*.txt
+dist/*.js
+
+# Silly macs
+.DS_Store
+*.swp

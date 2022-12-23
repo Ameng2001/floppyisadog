@@ -45,7 +45,7 @@ type BreaktimeEpisodePage struct {
 type BreaktimeListPage struct {
 	Page
 	// Message stuff
-	Episodes map[string]BreaktimeEpisodePage
+	Episodes map[string]*BreaktimeEpisodePage
 }
 
 type ConfirmResetPage struct {

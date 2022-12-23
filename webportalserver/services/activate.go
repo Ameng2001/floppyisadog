@@ -193,9 +193,7 @@ func activatePostHandler(c *gin.Context) {
 			} else if len(workerList.Teams) != 0 {
 				destination = &url.URL{Host: "myaccount." + environment.GetCurrEnv().ExternalApex, Scheme: "http"}
 			} else {
-				//TODO
-				//destination = &url.URL{Host: "www." + environment.GetCurrEnv().ExternalApex, Path: newCompanyPath, Scheme: "http"}
-				destination = &url.URL{Host: environment.GetCurrEnv().ExternalApex + ":9001", Path: newCompanyPath, Scheme: "http"}
+				destination = &url.URL{Host: "www." + environment.GetCurrEnv().ExternalApex + ":9001", Path: newCompanyPath, Scheme: "http"}
 			}
 			c.Redirect(http.StatusFound, destination.String())
 		}

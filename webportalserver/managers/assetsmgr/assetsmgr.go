@@ -79,6 +79,10 @@ func GetTemplate() *template.Template {
 	return tmpl
 }
 
+func GetBeakTime() map[string]string {
+	return breaktimeSource
+}
+
 // Added in template
 func hasField(v interface{}, name string) bool {
 	rv := reflect.ValueOf(v)

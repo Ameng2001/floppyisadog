@@ -78,7 +78,7 @@ func loginHandler(c *gin.Context) {
 			}
 
 			if returnTo == "" {
-				//TODO 调试，先默认进入myaccount，且端口为8080
+				//TODO 调试，先默认进入myaccount
 				//destination := &url.URL{Host: "app." + environment.GetCurrEnv().ExternalApex, Scheme: scheme}
 				destination := &url.URL{Host: "myaccount." + environment.GetCurrEnv().ExternalApex + ":9001", Scheme: scheme}
 				returnTo = destination.String()

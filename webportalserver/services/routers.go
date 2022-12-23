@@ -18,13 +18,16 @@ func RegisteRoutes(router *gin.RouterGroup) {
 	router.GET("/activate/:token", activateGetHandler)
 	router.POST("/activate/:token", activatePostHandler)
 	router.GET("/reset/:token", confirmResetHandler)
+	router.POST("/reset/:token", confirmResetHandler)
 	router.GET(loginPath, loginHandler)
 	router.POST(loginPath, loginHandler)
 	router.GET("/logout/", logoutHandler)
 	router.GET(newCompanyPath, newCompanyHandler)
+	router.POST(newCompanyPath, newCompanyHandler)
 	router.GET("/breaktime/", breaktimeListHandler)
 	router.GET("/breaktime/:slug", breaktimeEpisodeHandler)
 	router.GET(passwordResetPath, resetHandler)
+	router.POST(passwordResetPath, resetHandler)
 
 	//注册两个api端点
 	router.GET("/whoami/", whoamiHandler)
