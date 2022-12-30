@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { push } from 'connected-react-router';
 import LoadingScreen from 'components/LoadingScreen';
 import * as actions from 'actions';
 import {
@@ -38,9 +39,9 @@ class Launcher extends Component {
       // if only a member of 1 organization, route them directly
       if (companies.length === 1) {
         const company = companies.pop();
-        hashHistory.push(
+        dispatch(push(
           getRoute(COMPANY_BASE, { companyUuid: company.uuid })
-        );
+        ));
       }
     }
   }

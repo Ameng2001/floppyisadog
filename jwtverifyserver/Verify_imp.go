@@ -34,7 +34,7 @@ func (imp *VerifyImp) Verify(ctx context.Context, req *jwtverifyserver.VeifyReq,
 		rsp.Ret = jwtverifyserver.E_VERIFY_CODE_EVC_ERR_TOKEN
 		return jwtverifyserver.E_VERIFY_CODE_EVC_ERR_TOKEN, errors.New("bad token")
 	}
-	uuid, support, err = crypto.RetrieveSessionInformation(req.Token, environment.GetCurrEnv().JWTTokenSecret)
+	uuid, support, err := crypto.RetrieveSessionInformation(req.Token, environment.GetCurrEnv().JWTTokenSecret)
 	if err == nil {
 		if support {
 			authz = consts.AuthorizationSupportUser

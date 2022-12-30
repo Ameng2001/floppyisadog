@@ -27,7 +27,7 @@ func main() {
 
 	// New servant imp
 	imp := new(VerifyImp)
-	err := imp.Init()
+	err = imp.Init()
 	if err != nil {
 		fmt.Printf("VerifyImp init fail, err:(%s)\n", err)
 		os.Exit(-1)

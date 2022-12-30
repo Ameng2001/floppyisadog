@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { bindActionCreators } from 'redux';
@@ -161,4 +162,4 @@ const Form = reduxForm({
 
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Form);
-export default Container;
+export default withRouter(Container);

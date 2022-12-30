@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { matchPath } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import NavigationSide from 'components/SideNavigation';
 import Intercom from 'components/Intercom';
@@ -63,9 +65,11 @@ App.propTypes = {
 
 function mapStateToProps(state, ownProps) {
   return {
-    companyId: ownProps.routeParams.companyId,
+    companyUuid: ownProps.match.params.companyUuid,
     intercomSettings: state.whoami.intercomSettings,
   };
 }
 
-export default connect(mapStateToProps)(App);
+const ConnectedComponent = connect(mapStateToProps)(App);
+export default withRouter(ConnectedComponent);
+

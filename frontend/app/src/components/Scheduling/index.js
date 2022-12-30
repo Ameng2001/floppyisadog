@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { DragDropContext as dragDropContext } from 'react-dnd';
+import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as actions from 'actions';
 import LoadingScreen from 'components/LoadingScreen';
@@ -75,93 +76,96 @@ class Scheduling extends Component {
     }
 
     // TODO - add publish button into top controls
+    // TODO - add publish button into top controls
 
     return (
-      <div className="scheduling-container">
-        <ul className="scheduling-controls">
-          <li className="control-unit">
-            <SchedulingDateController
-              queryStart={params.range.start}
-              queryStop={params.range.stop}
-              timezone={timezone}
-              stepDateRange={stepDateRange}
-              disabled={isSaving}
-            />
-          </li>
-          <li className="control-unit">
-            <SchedulingViewByController
-              onClick={changeViewBy}
-              viewBy={viewBy}
-              disabled={isSaving}
-            />
-          </li>
-          <li className="control-unit control-unit-hidden-on-collapse">
-            <SearchField
-              width={200}
-              onChange={updateSearchFilter}
-              darkBackground
-              disabled={isSaving}
-            />
-          </li>
-          <li className="publish-week-btn control-unit-hidden-on-collapse">
-            <StaffjoyButton
-              buttonType={publishButtonStyle}
-              onClick={publishTeamShifts}
-              disabled={isSaving}
-            >
-              {publishAction}
-            </StaffjoyButton>
-          </li>
-          <li className="create-shift-btn control-unit-hidden-on-collapse">
-            <CreateShiftModal
-              tableSize={tableSize}
+      <DndProvider backend={HTML5Backend}>
+        <div className="scheduling-container">
+          <ul className="scheduling-controls">
+            <li className="control-unit">
+              <SchedulingDateController
+                queryStart={params.range.start}
+                queryStop={params.range.stop}
+                timezone={timezone}
+                stepDateRange={stepDateRange}
+                disabled={isSaving}
+              />
+            </li>
+            <li className="control-unit">
+              <SchedulingViewByController
+                onClick={changeViewBy}
+                viewBy={viewBy}
+                disabled={isSaving}
+              />
+            </li>
+            <li className="control-unit control-unit-hidden-on-collapse">
+              <SearchField
+                width={200}
+                onChange={updateSearchFilter}
+                darkBackground
+                disabled={isSaving}
+              />
+            </li>
+            <li className="publish-week-btn control-unit-hidden-on-collapse">
+              <StaffjoyButton
+                buttonType={publishButtonStyle}
+                onClick={publishTeamShifts}
+                disabled={isSaving}
+              >
+                {publishAction}
+              </StaffjoyButton>
+            </li>
+            <li className="create-shift-btn control-unit-hidden-on-collapse">
+              <CreateShiftModal
+                tableSize={tableSize}
+                startDate={startDate}
+                timezone={timezone}
+                modalCallbackToggle={toggleSchedulingModal}
+                containerComponent="button"
+                containerProps={{
+                  buttonType: 'neutral',
+                  disabled: isSaving,
+                }}
+                viewBy={viewBy}
+                employees={employees}
+                jobs={jobs}
+                onSave={createTeamShift}
+                modalFormData={modalFormData}
+                updateSchedulingModalFormData={updateSchedulingModalFormData}
+                clearSchedulingModalFormData={clearSchedulingModalFormData}
+              />
+            </li>
+          </ul>
+
+          {(() =>
+            // TODO when we have more views, determine which view type to use
+            // if (props.params.viewType === 'week') {
+            <ShiftWeekTable
+              droppedSchedulingCard={droppedSchedulingCard}
               startDate={startDate}
+              tableSize={tableSize}
               timezone={timezone}
-              modalCallbackToggle={toggleSchedulingModal}
-              containerComponent="button"
-              containerProps={{
-                buttonType: 'neutral',
-                disabled: isSaving,
-              }}
-              viewBy={viewBy}
               employees={employees}
               jobs={jobs}
-              onSave={createTeamShift}
+              shifts={shifts}
+              filters={filters}
+              viewBy={viewBy}
+              deleteTeamShift={deleteTeamShift}
+              toggleSchedulingModal={toggleSchedulingModal}
+              modalOpen={modalOpen}
               modalFormData={modalFormData}
+              editTeamShift={editTeamShift}
+              createTeamShift={createTeamShift}
               updateSchedulingModalFormData={updateSchedulingModalFormData}
               clearSchedulingModalFormData={clearSchedulingModalFormData}
+              onCardZAxisChange={this.props.handleCardZAxisChange}
+              isSaving={isSaving}
+              companyUuid={companyUuid}
+              teamUuid={teamUuid}
             />
-          </li>
-        </ul>
-
-        {(() =>
-          // TODO when we have more views, determine which view type to use
-          // if (props.params.viewType === 'week') {
-          <ShiftWeekTable
-            droppedSchedulingCard={droppedSchedulingCard}
-            startDate={startDate}
-            tableSize={tableSize}
-            timezone={timezone}
-            employees={employees}
-            jobs={jobs}
-            shifts={shifts}
-            filters={filters}
-            viewBy={viewBy}
-            deleteTeamShift={deleteTeamShift}
-            toggleSchedulingModal={toggleSchedulingModal}
-            modalOpen={modalOpen}
-            modalFormData={modalFormData}
-            editTeamShift={editTeamShift}
-            createTeamShift={createTeamShift}
-            updateSchedulingModalFormData={updateSchedulingModalFormData}
-            clearSchedulingModalFormData={clearSchedulingModalFormData}
-            onCardZAxisChange={this.props.handleCardZAxisChange}
-            isSaving={isSaving}
-            companyUuid={companyUuid}
-            teamUuid={teamUuid}
-          />
-        )()}
-      </div>
+          )()}
+        </div>
+      </DndProvider>
     );
   }
 }
@@ -336,7 +340,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 
-export default connect(
+const ConnectedComponent = connect(
   mapStateToProps,
   mapDispatchToProps
-)(dragDropContext(HTML5Backend)(Scheduling));
+)(Scheduling);
+export default withRouter(ConnectedComponent);
+
+    

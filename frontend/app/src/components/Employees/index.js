@@ -1,7 +1,9 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 import * as actions from 'actions';
 import LoadingScreen from 'components/LoadingScreen';
 import SearchField from 'components/SearchField';
@@ -143,12 +145,12 @@ function mapStateToProps(state, ownProps) {
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   tableRowClicked: (event, employeeUuid) => {
-    hashHistory.push(
+    dispatch(push(
       getRoute(COMPANY_EMPLOYEE, {
         companyUuid: ownProps.match.params.companyUuid,
         employeeUuid,
       })
-    );
+    ));
   },
   updateSearchFilter: (event) => {
     dispatch(actions.updateEmployeesSearchFilter(event.target.value));
@@ -156,4 +158,5 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   dispatch,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Employees);
+const ConnectedComponent = connect(mapStateToProps, mapDispatchToProps)(Employees);
+export default withRouter(ConnectedComponent);

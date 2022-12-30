@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from 'actions';
 import * as constants from 'constants/constants';
@@ -434,7 +435,8 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(
+const ConnectedComponent = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(Settings);
+export default withRouter(ConnectedComponent);
