@@ -44,11 +44,14 @@ const Main = () =>
         {/* Company Launcher  */}
         <Switch>
           <Route
-            exact path={paths.getRoute(paths.ROOT_PATH)}
-            component={Launcher}
-          />
+              exact path={paths.getRoute(paths.ROOT_PATH)}
+              component={Launcher}
+            />
+
           {/* Base page for a specific company */}
+          
           <Redirect exact from={paths.getRoute(paths.COMPANY_BASE)} to={paths.getRoute(paths.COMPANY_EMPLOYEES)} />
+
           <Route
             path={paths.getRoute(paths.COMPANY_EMPLOYEES)} component={ (props) => (
               <Employees { ...props }>
@@ -65,12 +68,16 @@ const Main = () =>
               </Employees>
             ) }
           />
+
           <Route
             path={paths.getRoute(paths.COMPANY_HISTORY)}
             component={Title}
           />
+
           {/* Base page for a team within a company  */}
+          
           <Redirect exact from={paths.getRoute(paths.TEAM_BASE)} to={paths.getRoute(paths.TEAM_SCHEDULING)} />
+
           <Route
             path={paths.getRoute(paths.TEAM_SCHEDULING)}
             component={Scheduling}

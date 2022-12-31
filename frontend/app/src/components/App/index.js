@@ -64,12 +64,46 @@ App.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
+  // @TODO is there a cleaner way? to get it via ownProps
+  // ownProps.match.params = [] - always for some reason.
+  const match = matchPath(location.pathname, { 
+    path: paths.getRoute(paths.COMPANY_EMPLOYEES),
+    exact: true,
+    strict: false
+  }) || matchPath(location.pathname, { 
+    path: paths.getRoute(paths.COMPANY_EMPLOYEE),
+    exact: true,
+    strict: false
+  }) || matchPath(location.pathname, { 
+    path: paths.getRoute(paths.COMPANY_HISTORY),
+    exact: true,
+    strict: false
+  }) || matchPath(location.pathname, { 
+    path: paths.getRoute(paths.TEAM_SCHEDULING),
+    exact: true,
+    strict: false
+  }) || matchPath(location.pathname, { 
+    path: paths.getRoute(paths.TEAM_SETTINGS),
+    exact: true,
+    strict: false
+  })
+  ;
+  
+  let companyUuid = null;
+  try {
+    companyUuid = match.params.companyUuid;
+  } catch(e) {
+    // err?
+  }
+
+
+  
   return {
-    companyUuid: ownProps.match.params.companyUuid,
+    companyUuid,
     intercomSettings: state.whoami.intercomSettings,
   };
 }
 
 const ConnectedComponent = connect(mapStateToProps)(App);
-export default withRouter(ConnectedComponent);
 
+export default withRouter(ConnectedComponent);
